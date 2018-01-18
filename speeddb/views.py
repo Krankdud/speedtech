@@ -1,9 +1,10 @@
 from speeddb import app
+from flask import render_template
 from flask_user import login_required
 
 @app.route('/')
 def index():
-    return 'Hello, world!'
+    return render_template('home.html')
 
 @app.route('/profile')
 @login_required
