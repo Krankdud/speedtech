@@ -9,5 +9,6 @@ setup(
         'flask_sqlalchemy',
         'flask_wtf',
         'flask-user',
+        'pyembed'
     ],
 )
