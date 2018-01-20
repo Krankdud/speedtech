@@ -17,11 +17,11 @@ def members():
 def submit():
     form = forms.UploadForm()
 
-    if request.method == 'POST':
+    if request.method == 'POST' and form.validate():
         clip = Clip(title=form.title.data, description=form.description.data, url=form.url.data, user_id=current_user.id)
         db.session.add(clip)
         db.session.commit()
 
         return 'Success'
-    elif request.method == 'GET':
-        return render_template('upload.html', form=form)
+
+    return render_template('upload.html', form=form)
