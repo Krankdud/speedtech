@@ -1,8 +1,9 @@
 from speeddb import app, db, forms
 from speeddb.models.clips import Clip
 from speeddb.models.tags import Tag
-from flask import render_template, request
+from flask import abort, Markup, redirect, render_template, request, url_for
 from flask_user import current_user, login_required
+from pyembed.core import PyEmbed
 
 @app.route('/')
 def index():
@@ -33,6 +34,16 @@ def submit():
         db.session.add(clip)
         db.session.commit()
 
-        return 'Success'
+        return redirect(url_for('show_clip', clip_id=clip.id))
 
     return render_template('upload.html', form=form)
+
+@app.route('/clip/<int:clip_id>')
+def show_clip(clip_id):
+    clip = Clip.query.get(clip_id)
+    if clip is None:
+        abort(404)
+
+    clip_embed = Markup(PyEmbed().embed(clip.url))
+
+    return render_template('clip.html', clip=clip, clip_embed=clip_embed)

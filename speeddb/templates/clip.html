@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}{{ clip.title }}{% endblock %}
+{% block content %}
+<h1>{{ clip.title }}</h1>
+<h3>{{ clip.user.username }}</h3>
+{{ clip_embed }}
+<p>{{ clip.description }}</p>
+{% for tag in clip.tags %}
+<span class="badge badge-primary">{{ tag.name }}</span>
+{% endfor %}
+{% endblock %}
