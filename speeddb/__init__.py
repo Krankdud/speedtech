@@ -2,12 +2,15 @@ import click
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_user import UserManager, SQLAlchemyAdapter
+from flask_wtf import CSRFProtect
 
 app = Flask(__name__, instance_relative_config=True)
 app.config.from_object('speeddb.default_settings')
 app.config.from_pyfile('application.cfg', silent=True)
 
 db = SQLAlchemy(app)
+
+csrf = CSRFProtect(app)
 
 import speeddb.views
 

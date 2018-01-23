@@ -3,7 +3,7 @@
 {% block content %}
 <h1>Submit a clip</h1>
 <form action="/upload" method="post" role="form">
-	{{ form.csrf }}
+	{{ form.csrf_token }}
 	<div class="form-group">
 		{{ form.title.label }}
 		{% if form.title.errors %}
@@ -38,8 +38,15 @@
 		{% endif %}
 	</div>
 	<div class="form-group">
-		<label for="tags">Tags</label>
-		<input type="text" class="form-control" id="tags" name="tags" placeholder="Tags">
+		{{ form.tags.label }}
+		{% if form.tags.errors %}
+			<input class="form-control is-invalid" id="tags" name="tags" type="text" value="" data-role="tagsinput">
+			<div class="invalid-feedback">
+				{% for error in form.tags.errors %}{{ error }}{% endfor %}
+			</div>
+		{% else %}
+			<input class="form-control" id="tags" name="tags" type="text" value="" data-role="tagsinput">
+		{% endif %}
 	</div>
 	<div class="form-group">
 		<button type="submit" class="btn btn-primary">Submit</button>
