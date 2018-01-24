@@ -1,4 +1,5 @@
-from speeddb import app, db, forms
+from speeddb import app, constants as cn, db, forms
+from speeddb.oembed_cache import get_cached_embed
 from speeddb.models.clips import Clip
 from speeddb.models.tags import Tag
 from flask import abort, Markup, redirect, render_template, request, url_for
@@ -44,6 +45,29 @@ def show_clip(clip_id):
     if clip is None:
         abort(404)
 
-    clip_embed = Markup(PyEmbed().embed(clip.url))
+    clip_embed = get_cached_embed(clip.url)
 
     return render_template('clip.html', clip=clip, clip_embed=clip_embed)
+
+@app.route('/tag/<tag_name>')
+def show_tag(tag_name):
+    return redirect(url_for('show_tag_page', tag_name=tag_name, page=1))
+
+@app.route('/tag/<tag_name>/<int:page>')
+def show_tag_page(tag_name, page):
+    if page < 1:
+        abort(400)
+
+    tag = Tag.query.filter_by(name=tag_name).first()
+    if tag is None:
+        abort(404)
+
+    page_count = len(tag.clips) // cn.SEARCH_CLIPS_PER_PAGE + 1
+    if page > page_count:
+        return abort(404)
+
+    clips = tag.clips[(page - 1) * cn.SEARCH_CLIPS_PER_PAGE : page * cn.SEARCH_CLIPS_PER_PAGE]
+    for clip in clips:
+        clip.embed = get_cached_embed(clip.url)
+
+    return render_template('search.html', clips=clips, search_query='Tag: %s' % tag.name, tag_name=tag.name, page=page, page_count=page_count)
