@@ -31,7 +31,7 @@ user_manager = UserManager(db_adapter, app)
 
 
 @app.cli.command()
-def initdb():
+def init_db():
     click.echo('Creating the db...')
     click.echo(app.config['SQLALCHEMY_DATABASE_URI'])
     db.create_all()

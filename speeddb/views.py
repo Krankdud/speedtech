@@ -62,7 +62,10 @@ def show_tag_page(tag_name, page):
     if tag is None:
         abort(404)
 
-    page_count = len(tag.clips) // cn.SEARCH_CLIPS_PER_PAGE + 1
+    page_count = len(tag.clips) // cn.SEARCH_CLIPS_PER_PAGE
+    if len(tag.clips) % cn.SEARCH_CLIPS_PER_PAGE != 0:
+        page_count += 1
+
     if page > page_count:
         return abort(404)
 
@@ -70,4 +73,4 @@ def show_tag_page(tag_name, page):
     for clip in clips:
         clip.embed = get_cached_embed(clip.url)
 
-    return render_template('search.html', clips=clips, search_query='Tag: %s' % tag.name, tag_name=tag.name, page=page, page_count=page_count)
+    return render_template('tag.html', clips=clips, search_query='Tag: %s' % tag.name, tag_name=tag.name, page=page, page_count=page_count)
