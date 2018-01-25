@@ -2,10 +2,19 @@
 {% block title %}{{ clip.title }}{% endblock %}
 {% block content %}
 <h1>{{ clip.title }}</h1>
-<h3>{{ clip.user.username }}</h3>
-{{ clip_embed }}
-<p>{{ clip.description }}</p>
-{% for tag in clip.tags %}
-<span class="badge badge-primary">{{ tag.name }}</span>
-{% endfor %}
+<div class="clip-author">Submitted by <a href="#">{{ clip.user.username }}</a> on {{ clip.time_created }}</div>
+<div class="clip-embed">
+    {{ clip_embed }}
+</div>
+<div class="clip-description">
+    {{ clip.description }}
+</div>
+<div class="clip-tags">
+    {% for tag in clip.tags %}
+        <a href="{{ url_for('show_tag_page', tag_name=tag.name, page=1) }}" class="badge badge-primary">{{ tag.name }}</a>
+    {% endfor %}
+</div>
+<div class="clip-links">
+    <a href="#">Report</a>
+</div>
 {% endblock %}
