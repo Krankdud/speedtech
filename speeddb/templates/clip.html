@@ -15,6 +15,12 @@
     {% endfor %}
 </div>
 <div class="clip-links">
+    {% set separator = joiner('-') %}
+    {% if g.user.is_authenticated and g.user.id == clip.user.id %}
+        {{ separator() }}
+        <a href="{{ url_for('edit_clip', clip_id=clip.id) }}">Edit</a>
+    {% endif %}
+    {{ separator() }}
     <a href="#">Report</a>
 </div>
 {% endblock %}

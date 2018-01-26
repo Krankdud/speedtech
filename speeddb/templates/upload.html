@@ -1,8 +1,8 @@
 {% extends "base.html" %}
-{% block title %}Submit{% endblock %}
+{% block title %}{{ title }}{% endblock %}
 {% block content %}
-<h1>Submit a clip</h1>
-<form action="/upload" method="post" role="form">
+<h1>{{ title }}</h1>
+<form action="{{ post_url }}" method="post" role="form">
 	{{ form.csrf_token }}
 	<div class="form-group">
 		{{ form.title.label }}
@@ -40,12 +40,12 @@
 	<div class="form-group">
 		{{ form.tags.label }}
 		{% if form.tags.errors %}
-			<input class="form-control is-invalid" id="tags" name="tags" type="text" value="" data-role="tagsinput">
+			{{ form.tags(class="form-control is-invalid", **{'data-role': 'tagsinput'}) }}
 			<div class="invalid-feedback">
 				{% for error in form.tags.errors %}{{ error }}{% endfor %}
 			</div>
 		{% else %}
-			<input class="form-control" id="tags" name="tags" type="text" value="" data-role="tagsinput">
+			{{ form.tags(class="form-control", **{'data-role': 'tagsinput'}) }}
 		{% endif %}
 	</div>
 	<div class="form-group">
