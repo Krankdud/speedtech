@@ -1,4 +1,5 @@
 import click
+import shutil
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_user import UserManager, SQLAlchemyAdapter
@@ -19,6 +20,10 @@ csrf = CSRFProtect(app)
 import speeddb.oembed_cache as oembed_cache
 oembed_cache.init_cache()
 
+# Create the search index
+import speeddb.search as search
+search.create_index(app.config['WHOOSH_INDEX'])
+
 import speeddb.views
 
 from speeddb.models.user import User
@@ -35,4 +40,21 @@ def init_db():
     click.echo('Creating the db...')
     click.echo(app.config['SQLALCHEMY_DATABASE_URI'])
     db.create_all()
+    click.echo('Done!')
+
+@app.cli.command()
+def rebuild_index():
+    from speeddb.models.clips import Clip
+
+    click.echo('Removing whoosh directory...')
+    shutil.rmtree(app.config['WHOOSH_INDEX'])
+
+    click.echo('Recreating index...')
+    search.create_index(app.config['WHOOSH_INDEX'])
+
+    click.echo('Adding clips to index...')
+    clips = Clip.query.all()
+    for clip in clips:
+        search.add_clip(clip)
+
     click.echo('Done!')

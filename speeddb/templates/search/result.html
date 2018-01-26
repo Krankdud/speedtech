@@ -1,0 +1,39 @@
+{% macro search_result(clip, loop_index) -%}
+    <div class="card">
+        <div class="card-header" id="heading{{ loop_index }}">
+            <div class="row">
+                <div class="col">
+                    <a href="#" data-toggle="collapse" data-target="#collapse{{ loop_index }}" aria-expanded="false" aria-controls="collapse{{ loop_index }}">
+                        {{ clip.title }}
+                    </a>
+                </div>
+                <div class="col-auto">
+                    <a href="#">{{ clip.user.username }}</a>
+                </div>
+            </div>
+        </div>
+        <div id="collapse{{ loop_index }}" class="collapse" aria-labelledby="heading{{ loop_index }}">
+            <div class="card-body">
+                <div class="search-embed">
+                    {{ clip.embed }}
+                </div>
+                <div class="search-author">
+                    Submitted by <a href="#">{{ clip.user.username }}</a> on {{ clip.time_created }}
+                </div>
+                <div class="search-description">
+                    {{ clip.description }}
+                </div>
+                <div class="search-tags">
+                    {% for tag in clip.tags %}
+                        <a href="{{ url_for('show_tag_page', tag_name=tag.name, page=1) }}" class="badge badge-primary">{{ tag.name }}</a>
+                    {% endfor %}
+                </div>
+                <div class="search-link-to-clip">
+                    <a href="{{ url_for('show_clip', clip_id=clip.id) }}">Link to clip</a>
+                    -
+                    <a href="#">Report</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{%- endmacro %}

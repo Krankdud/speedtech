@@ -2,10 +2,13 @@ from speeddb import app, db, user_manager
 from speeddb.models.user import User
 from speeddb.models.clips import Clip
 from speeddb.models.tags import Tag
+import speeddb.search as search
 from faker import Faker
 
 def main():
     fake = Faker()
+
+    search.create_index(app.config['WHOOSH_INDEX'])
 
     user = User(username=fake.user_name(),
                 password=user_manager.hash_password(fake.password()),
@@ -25,8 +28,9 @@ def main():
                     user_id=user.id,
                     tags=[tag])
         db.session.add(clip)
-
-    db.session.commit()
+        # Inefficient to commit here, but need an id for the indexing
+        db.session.commit()
+        search.add_clip(clip)
 
 if __name__ == '__main__':
     main()

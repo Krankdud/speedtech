@@ -1,5 +1,6 @@
 from speeddb import app, constants as cn, db, forms
 from speeddb.oembed_cache import get_cached_embed
+import speeddb.search as search
 from speeddb.models.clips import Clip
 from speeddb.models.tags import Tag
 from flask import abort, Markup, redirect, render_template, request, url_for
@@ -17,7 +18,7 @@ def members():
 
 @app.route('/upload', methods=['GET', 'POST'])
 @login_required
-def submit():
+def upload_clip():
     form = forms.UploadForm()
 
     if request.method == 'POST' and form.validate():
@@ -34,6 +35,8 @@ def submit():
 
         db.session.add(clip)
         db.session.commit()
+
+        search.add_clip(clip)
 
         return redirect(url_for('show_clip', clip_id=clip.id))
 
@@ -74,3 +77,29 @@ def show_tag_page(tag_name, page):
         clip.embed = get_cached_embed(clip.url)
 
     return render_template('tag.html', clips=clips, search_query='Tag: %s' % tag.name, tag_name=tag.name, page=page, page_count=page_count)
+
+@app.route('/search')
+def search_clips():
+    query = request.args.get('q')
+    if query == None:
+        return redirect(url_for('index'))
+
+    page = request.args.get('page')
+    if page == None:
+        page = 1
+
+    try:
+        page = int(page)
+    except ValueError:
+        abort(400)
+
+    search_results = search.search_clips(query, page)
+
+    page_count = search_results.length // cn.SEARCH_CLIPS_PER_PAGE
+    if search_results.length % cn.SEARCH_CLIPS_PER_PAGE != 0:
+        page_count += 1
+
+    for clip in search_results.clips:
+        clip.embed = get_cached_embed(clip.url)
+
+    return render_template('search.html', clips=search_results.clips, search_query=query, page=page, page_count=page_count)
