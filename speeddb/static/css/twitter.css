@@ -1,0 +1,9 @@
+.twitter-video {
+    position: static !important;
+    margin: 0px 0px !important;
+}
+
+.twitter-video div {
+    position: static !important;
+    padding-bottom: 0 !important;
+}

@@ -141,7 +141,7 @@ def search_clips():
 
     search_results = search.search_clips(query, page)
 
-    page_count = search.get_page_count(search_results.length)
+    page_count = pagination.get_page_count(search_results.length)
 
     for clip in search_results.clips:
         clip.embed = get_cached_embed(clip.url)
