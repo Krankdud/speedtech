@@ -1,6 +1,8 @@
 from speeddb import app, constants as cn, db, forms
 from speeddb.oembed_cache import get_cached_embed
+import speeddb.pagination as pagination
 import speeddb.search as search
+from speeddb.models.user import User
 from speeddb.models.clips import Clip
 from speeddb.models.tags import Tag
 from flask import abort, g, Markup, redirect, render_template, request, url_for
@@ -15,10 +17,23 @@ def before_request():
 def index():
     return render_template('index.html')
 
-@app.route('/profile')
-@login_required
-def members():
-    return 'Profile page'
+@app.route('/user/<username>')
+def user_profile(username):
+    return redirect(url_for('user_profile_page', username=username, page=1))
+
+@app.route('/user/<username>/<int:page>')
+def user_profile_page(username, page):
+    user = User.query.filter_by(username=username).first()
+    if user == None:
+        abort(404)
+
+    if page < 1:
+        abort(400)
+
+    clips = pagination.get_clips_on_page(user.clips, page)
+    page_count = pagination.get_page_count(len(user.clips))
+
+    return render_template('user.html', user=user, clips=clips, page=page, page_count=page_count)
 
 @app.route('/upload', methods=['GET', 'POST'])
 @login_required
@@ -29,7 +44,7 @@ def upload_clip():
         clip = Clip(title=form.title.data, description=form.description.data, url=form.url.data, user_id=current_user.id)
 
         for tag_name in form.tags.data.split(','):
-            tag_name = tag_name.strip()
+            tag_name = tag_name.strip().lower()
             if len(tag_name) > 0:
                 tag = Tag.query.filter_by(name=tag_name).first()
                 if tag is None:
@@ -76,7 +91,7 @@ def edit_clip(clip_id):
 
         clip.tags.clear()
         for tag_name in form.tags.data.split(','):
-            tag_name = tag_name.strip()
+            tag_name = tag_name.strip().lower()
             if len(tag_name) > 0:
                 tag = Tag.query.filter_by(name=tag_name).first()
                 if tag is None:
@@ -100,23 +115,12 @@ def show_tag(tag_name):
 
 @app.route('/tag/<tag_name>/<int:page>')
 def show_tag_page(tag_name, page):
-    if page < 1:
-        abort(400)
-
     tag = Tag.query.filter_by(name=tag_name).first()
     if tag is None:
         abort(404)
 
-    page_count = len(tag.clips) // cn.SEARCH_CLIPS_PER_PAGE
-    if len(tag.clips) % cn.SEARCH_CLIPS_PER_PAGE != 0:
-        page_count += 1
-
-    if page > page_count:
-        return abort(404)
-
-    clips = tag.clips[(page - 1) * cn.SEARCH_CLIPS_PER_PAGE : page * cn.SEARCH_CLIPS_PER_PAGE]
-    for clip in clips:
-        clip.embed = get_cached_embed(clip.url)
+    clips = pagination.get_clips_on_page(tag.clips, page)
+    page_count = pagination.get_page_count(len(tag.clips))
 
     return render_template('tag.html', clips=clips, search_query='Tag: %s' % tag.name, tag_name=tag.name, page=page, page_count=page_count)
 
@@ -137,9 +141,7 @@ def search_clips():
 
     search_results = search.search_clips(query, page)
 
-    page_count = search_results.length // cn.SEARCH_CLIPS_PER_PAGE
-    if search_results.length % cn.SEARCH_CLIPS_PER_PAGE != 0:
-        page_count += 1
+    page_count = search.get_page_count(search_results.length)
 
     for clip in search_results.clips:
         clip.embed = get_cached_embed(clip.url)

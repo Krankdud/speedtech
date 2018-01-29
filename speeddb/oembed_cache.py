@@ -14,6 +14,6 @@ def init_cache(cache_type="simple", memcached_servers=[], timeout=259200):
 def get_cached_embed(url):
     embed_html = cache.get(url)
     if embed_html == None:
-        embed_html = PyEmbed().embed(url)
+        embed_html = PyEmbed().embed(url, widget_type='video')
         cache.set(url, embed_html)
     return Markup(embed_html)
