@@ -35,6 +35,26 @@ def user_profile_page(username, page):
 
     return render_template('user.html', user=user, clips=clips, page=page, page_count=page_count)
 
+@app.route('/user/edit-profile', methods=['GET', 'POST'])
+@login_required
+def user_edit_profile():
+    form = forms.EditProfileForm(twitter=current_user.twitter, twitch=current_user.twitch, youtube=current_user.youtube, speedruncom=current_user.speedruncom, discord=current_user.discord)
+
+    if request.method == 'POST' and form.validate():
+        # If values in the form are empty, set the empty fields to None
+        current_user.twitter = form.twitter.data or None
+        current_user.twitch = form.twitch.data or None
+        current_user.youtube = form.youtube.data or None
+        current_user.speedruncom = form.speedruncom.data or None
+        current_user.discord = form.discord.data or None
+
+        db.session.add(current_user)
+        db.session.commit()
+
+        return redirect(url_for('user_profile_page', username=current_user.username, page=1))
+    
+    return render_template('edit_profile.html', user=current_user, form=form, post_url=url_for('user_edit_profile'))
+
 @app.route('/upload', methods=['GET', 'POST'])
 @login_required
 def upload_clip():

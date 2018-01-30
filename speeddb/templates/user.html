@@ -9,17 +9,17 @@
         <h1>{{ user.username }}</h1>
         <div class="user-social-media">
             <ul>
-                {% if user.speedruncom is not none %}
-                    <li><a href="http://www.speedrun.com/user/{{ user.speedruncom }}">speedrun.com</a></li>
+                {% if user.twitter is not none %}
+                    <li><a href="http://www.twitter.com/{{ user.twitter }}">Twitter</a></li>
                 {% endif %}
                 {% if user.twitch is not none %}
                     <li><a href="http://www.twitch.tv/{{ user.twitch }}">Twitch</a></li> 
                 {% endif %}
-                {% if user.twitter is not none %}
-                    <li><a href="http://www.twitter.com/{{ user.twitter }}">Twitter</a></li>
-                {% endif %}
                 {% if user.youtube is not none %}
                     <li><a href="http://www.youtube.com/user/{{ user.youtube }}">YouTube</a></li>
+                {% endif %}
+                {% if user.speedruncom is not none %}
+                    <li><a href="http://www.speedrun.com/user/{{ user.speedruncom }}">speedrun.com</a></li>
                 {% endif %}
                 {% if user.discord is not none %}
                     <li>Discord: {{ user.discord }}</li>
@@ -28,13 +28,13 @@
         </div>
         <div class="user-edit">
             {% if user.id == g.user.id %}
-                <a href="#">Edit profile</a>
+                <a href="{{ url_for('user_edit_profile') }}">Edit profile</a>
             {% endif %}
         </div>
     </div>
     <div class="col-md-8">
         {% for clip in clips %}
-            {{ search_result(clip, loop.index) }}
+            {{ search_result(clip, loop.index, show_user=false) }}
         {% endfor %}
         {{ pagination('/user/' + user.username + '/%d', page, page_count) }}
     </div>

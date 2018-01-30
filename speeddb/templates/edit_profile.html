@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block title %}Edit profile{% endblock %}
+{% block content %}
+<h1>Edit your profile</h1>
+<div class="edit-profile-change-password">
+    <div>
+        <a href="/user/change-username">Change username</a>
+    </div>
+    <div>
+        <a href="/user/change-password">Change password</a>
+    </div>
+</div>
+<form action="{{ post_url }}" method="post" role="form">
+    {{ form.csrf_token }}
+    <div class="form-group">
+        {{ form.twitter.label }}
+        {% if form.twitter.errors %}
+            {{ form.twitter(class="form-control is-invalid", placeholder="Twitter username (without the @)") }}
+            <div class="invalid-feedback">
+                {% for error in form.twitter.errors %}{{ error }}{% endfor %}
+            </div>
+        {% else %}
+            {{ form.twitter(class="form-control", placeholder="Twitter username (without the @)") }}
+        {% endif %}
+    </div>
+    <div class="form-group">
+        {{ form.twitch.label }}
+        {% if form.twitch.errors %}
+            {{ form.twitch(class="form-control is-invalid", placeholder="Twitch.tv username") }}
+            <div class="invalid-feedback">
+                {% for error in form.twitch.errors %}{{ error }}{% endfor %}
+            </div>
+        {% else %}
+            {{ form.twitch(class="form-control", placeholder="Twitch.tv username") }}
+        {% endif %}
+    </div>
+    <div class="form-group">
+        {{ form.youtube.label }}
+        {% if form.youtube.errors %}
+            {{ form.youtube(class="form-control is-invalid", placeholder="YouTube username") }}
+            <div class="invalid-feedback">
+                {% for error in form.youtube.errors %}{{ error }}{% endfor %}
+            </div>
+        {% else %}
+            {{ form.youtube(class="form-control", placeholder="YouTube username") }}
+        {% endif %}
+    </div>
+    <div class="form-group">
+        {{ form.speedruncom.label }}
+        {% if form.speedruncom.errors %}
+            {{ form.speedruncom(class="form-control is-invalid", placeholder="speedrun.com username") }}
+            <div class="invalid-feedback">
+                {% for error in form.speedruncom.errors %}{{ error }}{% endfor %}
+            </div>
+        {% else %}
+            {{ form.speedruncom(class="form-control", placeholder="speedrun.com username") }}
+        {% endif %}
+    </div>
+    <div class="form-group">
+        {{ form.discord.label }}
+        {% if form.discord.errors %}
+            {{ form.discord(class="form-control is-invalid", placeholder="Discord username") }}
+            <div class="invalid-feedback">
+                {% for error in form.discord.errors %}{{ error }}{% endfor %}
+            </div>
+        {% else %}
+            {{ form.discord(class="form-control", placeholder="Discord username") }}
+        {% endif %}
+    </div>
+	<div class="form-group">
+		<button type="submit" class="btn btn-primary">Confirm changes</button>
+	</div>
+</form>
+{% endblock %}

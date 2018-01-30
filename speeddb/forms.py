@@ -25,3 +25,12 @@ class UploadForm(FlaskForm):
         for tag in tag_list:
             if len(tag) > cn.TAG_NAME_LENGTH:
                 raise ValidationError('Tag must be less than %d characters' % cn.TAG_NAME_LENGTH)
+
+class EditProfileForm(FlaskForm):
+    """ EditProfileForm is the form used to update a user's profile """
+
+    twitter = StringField(u'Twitter', [Length(max=cn.USER_TWITTER_LENGTH)])
+    twitch = StringField(u'Twitch.tv', [Length(max=cn.USER_TWITCH_LENGTH)])
+    youtube = StringField(u'YouTube', [Length(max=cn.USER_YOUTUBE_LENGTH)])
+    speedruncom = StringField(u'speedrun.com', [Length(max=cn.USER_SPEEDRUNCOM_LENGTH)])
+    discord = StringField(u'Discord', [Length(max=cn.USER_DISCORD_LENGTH)])

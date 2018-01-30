@@ -1,4 +1,4 @@
-{% macro search_result(clip, loop_index) -%}
+{% macro search_result(clip, loop_index, show_user=true) -%}
     <div class="card">
         <div class="card-header" id="heading{{ loop_index }}">
             <div class="row">
@@ -7,9 +7,11 @@
                         {{ clip.title }}
                     </a>
                 </div>
-                <div class="col-auto">
-                    <a href="#">{{ clip.user.username }}</a>
-                </div>
+                {% if show_user %}
+                    <div class="col-auto">
+                        <a href="{{ url_for('user_profile_page', username=clip.user.username, page=1) }}">{{ clip.user.username }}</a>
+                    </div>
+                {% endif %}
             </div>
         </div>
         <div id="collapse{{ loop_index }}" class="collapse" aria-labelledby="heading{{ loop_index }}">
@@ -18,7 +20,7 @@
                     {{ clip.embed }}
                 </div>
                 <div class="search-author">
-                    Submitted by <a href="#">{{ clip.user.username }}</a> on {{ clip.time_created }}
+                    Submitted {% if show_user %}by <a href="{{ url_for('user_profile_page', username=clip.user.username, page=1) }}">{{ clip.user.username }}</a> {% endif %}on {{ clip.time_created }}
                 </div>
                 <div class="search-description">
                     {{ clip.description }}

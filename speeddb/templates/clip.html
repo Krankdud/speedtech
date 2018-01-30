@@ -2,8 +2,8 @@
 {% block title %}{{ clip.title }}{% endblock %}
 {% block content %}
 <h1>{{ clip.title }}</h1>
-<div class="clip-author">Submitted by <a href="#">{{ clip.user.username }}</a> on {{ clip.time_created }}</div>
-<div class="clip-embed">
+<div class="clip-author">Submitted by <a href="{{ url_for('user_profile_page', username=clip.user.username, page=1) }}">{{ clip.user.username }}</a> on {{ clip.time_created }}</div>
+<div class="clip-embed embed-responsive embed-responsive-16by9">
     {{ clip_embed }}
 </div>
 <div class="clip-description">
