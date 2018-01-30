@@ -4,8 +4,12 @@
 
 {% block title %}{{ search_query }}{% endblock %}
 {% block content %}
-{% for clip in clips %}
-    {{ search_result(clip, loop.index) }}
-{% endfor %}
-{{ pagination('/tag/' + tag_name + '/%d', page, page_count) }}
+{% if page_count > 0 %}
+    {% for clip in clips %}
+        {{ search_result(clip, loop.index) }}
+    {% endfor %}
+    {{ pagination('/tag/' + tag_name + '/%d', page, page_count) }}
+{% else %}
+    No clips found with the tag {{ tag_name }}
+{% endif %}
 {% endblock %}

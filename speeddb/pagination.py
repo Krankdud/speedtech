@@ -11,11 +11,6 @@ def get_page_count(clip_count):
 def get_clips_on_page(clips, page):
     ''' get_clips_on_page returns a slice of the clips list containing the clips on a given page.
     This function also retrieves the embedded content '''
-    if page < 1:
-        abort(400)
-    if page > get_page_count(len(clips)):
-        abort(404)
-
     clips_on_page = clips[(page - 1) * cn.SEARCH_CLIPS_PER_PAGE : page * cn.SEARCH_CLIPS_PER_PAGE]
     for clip in clips_on_page:
         clip.embed = oembed_cache.get_cached_embed(clip.url)

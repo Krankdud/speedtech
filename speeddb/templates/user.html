@@ -33,10 +33,15 @@
         </div>
     </div>
     <div class="col-md-8">
-        {% for clip in clips %}
-            {{ search_result(clip, loop.index, show_user=false) }}
-        {% endfor %}
-        {{ pagination('/user/' + user.username + '/%d', page, page_count) }}
+        <h1>Clips</h1> 
+        {% if page_count > 0 %}
+            {% for clip in clips %}
+                {{ search_result(clip, loop.index, show_user=false) }}
+            {% endfor %}
+            {{ pagination('/user/' + user.username + '/%d', page, page_count) }}
+        {% else %}
+            No clips have been uploaded by {{ user.username }}
+        {% endif %}
     </div>
 </div>
 {% endblock %}

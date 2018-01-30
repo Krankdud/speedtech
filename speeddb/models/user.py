@@ -10,8 +10,8 @@ class User(db.Model, UserMixin):
     active = db.Column(db.Boolean(), nullable=False, server_default='0')
 
     # Email 
-    # email = db.Column(db.String(cn.USER_EMAIL_LENGTH), unique=True, nullable=False)
-    # confirmed_at = db.Column(db.DateTime())
+    email = db.Column(db.String(cn.USER_EMAIL_LENGTH), unique=True, nullable=False)
+    confirmed_at = db.Column(db.DateTime())
 
     # Social media
     twitter = db.Column(db.String(cn.USER_TWITTER_LENGTH), nullable=True)

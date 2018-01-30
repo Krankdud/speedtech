@@ -8,6 +8,7 @@ setup(
         'flask',
         'flask_sqlalchemy',
         'flask_wtf',
+        'flask-mail',
         'flask-user',
         'pyembed'
     ],

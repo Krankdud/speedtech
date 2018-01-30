@@ -27,9 +27,6 @@ def user_profile_page(username, page):
     if user == None:
         abort(404)
 
-    if page < 1:
-        abort(400)
-
     clips = pagination.get_clips_on_page(user.clips, page)
     page_count = pagination.get_page_count(len(user.clips))
 

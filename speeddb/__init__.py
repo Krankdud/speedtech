@@ -1,6 +1,7 @@
 import click
 import shutil
 from flask import Flask
+from flask_mail import Mail
 from flask_sqlalchemy import SQLAlchemy
 from flask_user import UserManager, SQLAlchemyAdapter
 from flask_wtf import CSRFProtect
@@ -9,6 +10,9 @@ from flask_wtf import CSRFProtect
 app = Flask(__name__, instance_relative_config=True)
 app.config.from_object('speeddb.default_settings')
 app.config.from_pyfile('application.cfg', silent=True)
+
+# Setup mail
+mail = Mail(app)
 
 # Create the database
 db = SQLAlchemy(app)
