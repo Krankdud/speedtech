@@ -13,6 +13,11 @@ from pyembed.core import PyEmbed
 def before_request():
     g.user = current_user
 
+@app.route('/report')
+def report():
+    form = forms.ReportForm()
+    return render_template('report.html', form=form)
+
 @app.route('/')
 def index():
     return render_template('index.html')

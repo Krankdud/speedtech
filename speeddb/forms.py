@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, TextAreaField
+from wtforms import RadioField, StringField, TextAreaField
 from wtforms.validators import DataRequired, Length, URL, ValidationError
 from speeddb import constants as cn
 
@@ -34,3 +34,9 @@ class EditProfileForm(FlaskForm):
     youtube = StringField(u'YouTube', [Length(max=cn.USER_YOUTUBE_LENGTH)])
     speedruncom = StringField(u'speedrun.com', [Length(max=cn.USER_SPEEDRUNCOM_LENGTH)])
     discord = StringField(u'Discord', [Length(max=cn.USER_DISCORD_LENGTH)])
+
+class ReportForm(FlaskForm):
+    """ ReportForm is the form used by users to report inappropriate clips """
+
+    reason = RadioField(u'Reason', choices=[('content', 'Sexual or violent content'), ('not_speedrun', 'Not related to speedrunning'), ('spam', 'Spam'), ('other', 'Other')])
+    description = TextAreaField(u'Description', [Length(max=cn.REPORT_DESCRIPTION_LENGTH)])
