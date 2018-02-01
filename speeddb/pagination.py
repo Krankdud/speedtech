@@ -13,5 +13,5 @@ def get_clips_on_page(clips, page):
     This function also retrieves the embedded content '''
     clips_on_page = clips[(page - 1) * cn.SEARCH_CLIPS_PER_PAGE : page * cn.SEARCH_CLIPS_PER_PAGE]
     for clip in clips_on_page:
-        clip.embed = oembed_cache.get_cached_embed(clip.url)
+        clip.embed = oembed_cache.get(clip.url)
     return clips_on_page

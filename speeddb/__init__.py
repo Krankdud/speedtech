@@ -28,7 +28,7 @@ oembed_cache.init_cache()
 import speeddb.search as search
 search.create_index(app.config['WHOOSH_INDEX'])
 
-import speeddb.views
+from speeddb.views import *
 
 from speeddb.models.user import User
 import speeddb.models.tags
