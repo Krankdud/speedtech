@@ -1,4 +1,4 @@
-from speeddb import app, constants as cn, db, forms
+from speeddb import app, constants as cn, db, forms, mail
 from speeddb.oembed_cache import get_cached_embed
 import speeddb.pagination as pagination
 import speeddb.search as search
@@ -6,6 +6,7 @@ from speeddb.models.user import User
 from speeddb.models.clips import Clip
 from speeddb.models.tags import Tag
 from flask import abort, g, Markup, redirect, render_template, request, url_for
+from flask_mail import Message
 from flask_user import current_user, login_required
 from pyembed.core import PyEmbed
 
@@ -13,14 +14,19 @@ from pyembed.core import PyEmbed
 def before_request():
     g.user = current_user
 
-@app.route('/report')
-def report():
-    form = forms.ReportForm()
-    return render_template('report.html', form=form)
-
 @app.route('/')
 def index():
     return render_template('index.html')
+
+@app.route('/report', methods=['POST'])
+def report():
+    form = forms.ReportForm()
+    if form.validate():
+        msg = Message(subject="REPORT for clip %d" % form.clip_id.data, recipients=[app.config['REPORT_EMAIL']])
+        msg.body = "Clip %d has been reported\nReason: %s\nDescription: %s" % (form.clip_id.data, form.reason.data, form.description.data)
+        mail.send(msg)
+        return render_template('report_finish.html', success=True)
+    return render_template('report_finish.html', success=False)
 
 @app.route('/user/<username>')
 def user_profile(username):
@@ -34,8 +40,10 @@ def user_profile_page(username, page):
 
     clips = pagination.get_clips_on_page(user.clips, page)
     page_count = pagination.get_page_count(len(user.clips))
+    
+    report_form = forms.ReportForm()
 
-    return render_template('user.html', user=user, clips=clips, page=page, page_count=page_count)
+    return render_template('user.html', user=user, clips=clips, page=page, page_count=page_count, report_form=report_form)
 
 @app.route('/user/edit-profile', methods=['GET', 'POST'])
 @login_required
@@ -91,7 +99,9 @@ def show_clip(clip_id):
 
     clip_embed = get_cached_embed(clip.url)
 
-    return render_template('clip.html', clip=clip, clip_embed=clip_embed)
+    report_form = forms.ReportForm(clip_id=clip_id)
+
+    return render_template('clip.html', clip=clip, clip_embed=clip_embed, report_form=report_form)
 
 @app.route('/clip/<int:clip_id>/edit', methods=['GET', 'POST'])
 @login_required
@@ -144,7 +154,9 @@ def show_tag_page(tag_name, page):
     clips = pagination.get_clips_on_page(tag.clips, page)
     page_count = pagination.get_page_count(len(tag.clips))
 
-    return render_template('tag.html', clips=clips, search_query='Tag: %s' % tag.name, tag_name=tag.name, page=page, page_count=page_count)
+    report_form = forms.ReportForm()
+
+    return render_template('tag.html', clips=clips, search_query='Tag: %s' % tag.name, tag_name=tag.name, page=page, page_count=page_count, report_form = report_form)
 
 @app.route('/search')
 def search_clips():
@@ -168,4 +180,6 @@ def search_clips():
     for clip in search_results.clips:
         clip.embed = get_cached_embed(clip.url)
 
-    return render_template('search.html', clips=search_results.clips, search_query=query, page=page, page_count=page_count)
+    report_form = forms.ReportForm()
+
+    return render_template('search.html', clips=search_results.clips, search_query=query, page=page, page_count=page_count, report_form = report_form)

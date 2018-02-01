@@ -33,7 +33,7 @@
                 <div class="search-link-to-clip">
                     <a href="{{ url_for('show_clip', clip_id=clip.id) }}">Link to clip</a>
                     -
-                    <a href="#">Report</a>
+                    <a href="#" class="report-link" data-clip-id="{{ clip.id }}" data-toggle="modal" data-target="#report-modal">Report</a>
                 </div>
             </div>
         </div>

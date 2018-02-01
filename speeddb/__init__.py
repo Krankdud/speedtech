@@ -58,7 +58,6 @@ def rebuild_index():
 
     click.echo('Adding clips to index...')
     clips = Clip.query.all()
-    for clip in clips:
-        search.add_clip(clip)
+    search.add_clips(clips)
 
     click.echo('Done!')

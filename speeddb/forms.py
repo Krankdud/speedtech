@@ -1,6 +1,7 @@
 from flask_wtf import FlaskForm
-from wtforms import RadioField, StringField, TextAreaField
+from wtforms import IntegerField, RadioField, StringField, TextAreaField
 from wtforms.validators import DataRequired, Length, URL, ValidationError
+from wtforms.widgets import HiddenInput
 from speeddb import constants as cn
 
 class UploadForm(FlaskForm):
@@ -38,5 +39,6 @@ class EditProfileForm(FlaskForm):
 class ReportForm(FlaskForm):
     """ ReportForm is the form used by users to report inappropriate clips """
 
-    reason = RadioField(u'Reason', choices=[('content', 'Sexual or violent content'), ('not_speedrun', 'Not related to speedrunning'), ('spam', 'Spam'), ('other', 'Other')])
-    description = TextAreaField(u'Description', [Length(max=cn.REPORT_DESCRIPTION_LENGTH)])
+    clip_id = IntegerField(u'Clip ID', [DataRequired()], id='report-clip-id', widget=HiddenInput())
+    reason = RadioField(u'Reason', [DataRequired()], id='report-reason', choices=[('content', 'Sexual or violent content'), ('not_speedrun', 'Not related to speedrunning'), ('spam', 'Spam'), ('other', 'Other')])
+    description = TextAreaField(u'Description', [Length(max=cn.REPORT_DESCRIPTION_LENGTH)], id='report-description')

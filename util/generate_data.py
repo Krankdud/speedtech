@@ -12,6 +12,7 @@ def main():
 
     user = User(username=fake.user_name(),
                 password=user_manager.hash_password(fake.password()),
+                email=fake.email(),
                 active=True)
 
     tag = Tag(name='test-data')
@@ -21,6 +22,7 @@ def main():
 
     db.session.add(tag)
 
+    clips = []
     for i in range(2000):
         clip = Clip(title=fake.sentence(),
                     description=fake.text(),
@@ -28,9 +30,10 @@ def main():
                     user_id=user.id,
                     tags=[tag])
         db.session.add(clip)
-        # Inefficient to commit here, but need an id for the indexing
-        db.session.commit()
-        search.add_clip(clip)
+        clips.append(clip)
+
+    db.session.commit()
+    search.add_clips(clips)
 
 if __name__ == '__main__':
     main()

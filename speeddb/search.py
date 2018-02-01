@@ -37,6 +37,23 @@ def add_clip(clip):
                         user=clip.user.username)
     writer.commit()
 
+def add_clips(clips):
+    ''' utility function for adding a list of clips '''
+    writer = clip_index.writer()
+
+    for clip in clips:
+        tags = ''
+        for tag in clip.tags:
+            tags += tag.name.replace('-', ' ') + ' '
+
+        writer.add_document(id=clip.id,
+                            title=clip.title,
+                            description=clip.description,
+                            tags=tags.strip(),
+                            user=clip.user.username)
+    
+    writer.commit()
+
 def remove_clip(clip):
     ''' remove_clip removes the given clip from the index '''
     writer = clip_index.writer()

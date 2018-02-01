@@ -21,6 +21,7 @@
         <a href="{{ url_for('edit_clip', clip_id=clip.id) }}">Edit</a>
     {% endif %}
     {{ separator() }}
-    <a href="#">Report</a>
+    <a href="#" data-toggle="modal" data-target="#report-modal">Report</a>
 </div>
+{% include "report.html" with context %}
 {% endblock %}

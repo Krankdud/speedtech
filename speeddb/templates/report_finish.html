@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}Report{% endblock %}
+{% block content %}
+<div>
+    {% if success %}
+        Report submitted. Thank you for reporting an issue.
+    {% else %}
+        An error occurred while trying to submit your report. Please try again.
+    {% endif %}
+</div>
+{% endblock %}
