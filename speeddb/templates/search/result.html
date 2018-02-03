@@ -9,7 +9,7 @@
                 </div>
                 {% if show_user %}
                     <div class="col-auto">
-                        <a href="{{ url_for('user_profile_page', username=clip.user.username, page=1) }}">{{ clip.user.username }}</a>
+                        <a href="{{ url_for('views.user_profile_page', username=clip.user.username, page=1) }}">{{ clip.user.username }}</a>
                     </div>
                 {% endif %}
             </div>
@@ -20,18 +20,18 @@
                     {{ clip.embed }}
                 </div>
                 <div class="search-author">
-                    Submitted {% if show_user %}by <a href="{{ url_for('user_profile_page', username=clip.user.username, page=1) }}">{{ clip.user.username }}</a> {% endif %}on {{ clip.time_created }}
+                    Submitted {% if show_user %}by <a href="{{ url_for('views.user_profile_page', username=clip.user.username, page=1) }}">{{ clip.user.username }}</a> {% endif %}on {{ clip.time_created }}
                 </div>
                 <div class="search-description">
                     {{ clip.description }}
                 </div>
                 <div class="search-tags">
                     {% for tag in clip.tags %}
-                        <a href="{{ url_for('show_tag_page', tag_name=tag.name, page=1) }}" class="badge badge-primary">{{ tag.name }}</a>
+                        <a href="{{ url_for('views.show_tag_page', tag_name=tag.name, page=1) }}" class="badge badge-primary">{{ tag.name }}</a>
                     {% endfor %}
                 </div>
                 <div class="search-link-to-clip">
-                    <a href="{{ url_for('show_clip', clip_id=clip.id) }}">Link to clip</a>
+                    <a href="{{ url_for('views.show_clip', clip_id=clip.id) }}">Link to clip</a>
                     -
                     <a href="#" class="report-link" data-clip-id="{{ clip.id }}" data-toggle="modal" data-target="#report-modal">Report</a>
                 </div>

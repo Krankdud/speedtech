@@ -1,11 +1,7 @@
-from speeddb import app
+from speeddb.views import blueprint
 from flask import g, render_template
 from flask_user import current_user
 
-@app.before_request
-def before_request():
-    g.user = current_user
-
-@app.route('/')
+@blueprint.route('/')
 def index():
     return render_template('index.html')

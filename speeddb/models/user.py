@@ -1,5 +1,5 @@
 from flask_user import UserMixin
-from speeddb import app, constants as cn, db
+from speeddb import constants as cn, db
 from speeddb.models.clips import Clip
 
 class User(db.Model, UserMixin):

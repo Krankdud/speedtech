@@ -30,8 +30,8 @@
 
       <div class="collapse navbar-collapse" id="navbarsExampleDefault">
         <div class="navbar-nav mr-md-4">
-          <a class="nav-item nav-link" href="{{ url_for('index') }}">Home</a>
-          <a class="nav-item nav-link" href="{{ url_for('upload_clip') }}">Upload</a>
+          <a class="nav-item nav-link" href="{{ url_for('views.index') }}">Home</a>
+          <a class="nav-item nav-link" href="{{ url_for('views.upload_clip') }}">Upload</a>
         </div>
         <form action="/search" class="form-inline my-2 my-lg-0 mr-auto" role="search">
           <input class="form-control mr-sm-2" type="text" name="q" placeholder="Clips, users, tags..." aria-label="Search">
@@ -42,7 +42,7 @@
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarUserDropdownLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ g.user.username }}</a>
             <div class="dropdown-menu" aria-labbeledby="navbarUserDropdownLink">
-              <a class="dropdown-item" href="{{ url_for('user_profile_page', username=g.user.username, page=1) }}">Profile</a>
+              <a class="dropdown-item" href="{{ url_for('views.user_profile_page', username=g.user.username, page=1) }}">Profile</a>
               <a class="dropdown-item" href="user/sign-out">Log out</a>
             </div>
           </li>

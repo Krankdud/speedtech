@@ -2,7 +2,7 @@
 {% block title %}{{ clip.title }}{% endblock %}
 {% block content %}
 <h1>{{ clip.title }}</h1>
-<div class="clip-author">Submitted by <a href="{{ url_for('user_profile_page', username=clip.user.username, page=1) }}">{{ clip.user.username }}</a> on {{ clip.time_created }}</div>
+<div class="clip-author">Submitted by <a href="{{ url_for('views.user_profile_page', username=clip.user.username, page=1) }}">{{ clip.user.username }}</a> on {{ clip.time_created }}</div>
 <div class="clip-embed embed-responsive embed-responsive-16by9">
     {{ clip_embed }}
 </div>
@@ -11,14 +11,14 @@
 </div>
 <div class="clip-tags">
     {% for tag in clip.tags %}
-        <a href="{{ url_for('show_tag_page', tag_name=tag.name, page=1) }}" class="badge badge-primary">{{ tag.name }}</a>
+        <a href="{{ url_for('views.show_tag_page', tag_name=tag.name, page=1) }}" class="badge badge-primary">{{ tag.name }}</a>
     {% endfor %}
 </div>
 <div class="clip-links">
     {% set separator = joiner('-') %}
     {% if g.user.is_authenticated and g.user.id == clip.user.id %}
         {{ separator() }}
-        <a href="{{ url_for('edit_clip', clip_id=clip.id) }}">Edit</a>
+        <a href="{{ url_for('views.edit_clip', clip_id=clip.id) }}">Edit</a>
     {% endif %}
     {{ separator() }}
     <a href="#" data-toggle="modal" data-target="#report-modal">Report</a>

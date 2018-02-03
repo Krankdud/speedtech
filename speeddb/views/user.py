@@ -1,13 +1,14 @@
-from speeddb import app, db, forms, pagination
+from speeddb import db, forms, pagination
+from speeddb.views import blueprint
 from speeddb.models.user import User
-from flask import abort, redirect, render_template, url_for
-from flask_user import login_required
+from flask import abort, redirect, render_template, request, url_for
+from flask_user import current_user, login_required
 
-@app.route('/user/<username>')
+@blueprint.route('/user/<username>')
 def user_profile(username):
-    return redirect(url_for('user_profile_page', username=username, page=1))
+    return redirect(url_for('views.user_profile_page', username=username, page=1))
 
-@app.route('/user/<username>/<int:page>')
+@blueprint.route('/user/<username>/<int:page>')
 def user_profile_page(username, page):
     user = User.query.filter_by(username=username).first()
     if user == None:
@@ -20,7 +21,7 @@ def user_profile_page(username, page):
 
     return render_template('user.html', user=user, clips=clips, page=page, page_count=page_count, report_form=report_form)
 
-@app.route('/user/edit-profile', methods=['GET', 'POST'])
+@blueprint.route('/user/edit-profile', methods=['GET', 'POST'])
 @login_required
 def user_edit_profile():
     form = forms.EditProfileForm(twitter=current_user.twitter, twitch=current_user.twitch, youtube=current_user.youtube, speedruncom=current_user.speedruncom, discord=current_user.discord)
@@ -36,6 +37,6 @@ def user_edit_profile():
         db.session.add(current_user)
         db.session.commit()
 
-        return redirect(url_for('user_profile_page', username=current_user.username, page=1))
+        return redirect(url_for('views.user_profile_page', username=current_user.username, page=1))
     
-    return render_template('edit_profile.html', user=current_user, form=form, post_url=url_for('user_edit_profile'))
+    return render_template('edit_profile.html', user=current_user, form=form, post_url=url_for('views.user_edit_profile'))

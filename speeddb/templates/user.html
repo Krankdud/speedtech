@@ -28,7 +28,7 @@
         </div>
         <div class="user-edit">
             {% if user.id == g.user.id %}
-                <a href="{{ url_for('user_edit_profile') }}">Edit profile</a>
+                <a href="{{ url_for('views.user_edit_profile') }}">Edit profile</a>
             {% endif %}
         </div>
     </div>
@@ -44,4 +44,5 @@
         {% endif %}
     </div>
 </div>
+{% include "report.html" %}
 {% endblock %}

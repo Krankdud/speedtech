@@ -1,10 +1,11 @@
-from speeddb import app, db, forms, oembed_cache, search
+from speeddb import db, forms, oembed_cache, search
+from speeddb.views import blueprint
 from speeddb.models.clips import Clip
 from speeddb.models.tags import Tag
-from flask import abort, redirect, render_template, url_for
-from flask_user import login_required
+from flask import abort, redirect, render_template, request, url_for
+from flask_user import current_user, login_required
 
-@app.route('/upload', methods=['GET', 'POST'])
+@blueprint.route('/upload', methods=['GET', 'POST'])
 @login_required
 def upload_clip():
     form = forms.UploadForm()
@@ -26,11 +27,11 @@ def upload_clip():
 
         search.add_clip(clip)
 
-        return redirect(url_for('show_clip', clip_id=clip.id))
+        return redirect(url_for('views.show_clip', clip_id=clip.id))
 
-    return render_template('upload.html', form=form, post_url=url_for('upload_clip'), title='Submit a clip')
+    return render_template('upload.html', form=form, post_url=url_for('views.upload_clip'), title='Submit a clip')
 
-@app.route('/clip/<int:clip_id>')
+@blueprint.route('/clip/<int:clip_id>')
 def show_clip(clip_id):
     clip = Clip.query.get(clip_id)
     if clip is None:
@@ -42,7 +43,7 @@ def show_clip(clip_id):
 
     return render_template('clip.html', clip=clip, clip_embed=clip_embed, report_form=report_form)
 
-@app.route('/clip/<int:clip_id>/edit', methods=['GET', 'POST'])
+@blueprint.route('/clip/<int:clip_id>/edit', methods=['GET', 'POST'])
 @login_required
 def edit_clip(clip_id):
     clip = Clip.query.get(clip_id)
@@ -52,7 +53,7 @@ def edit_clip(clip_id):
 
     tag_string = ''
     for tag in clip.tags:
-        tag_string += tag.name
+        tag_string += tag.name + ','
     form = forms.UploadForm(title=clip.title, description=clip.description, url=clip.url, tags=tag_string)
 
     if request.method == 'POST' and form.validate():
@@ -76,6 +77,6 @@ def edit_clip(clip_id):
         search.remove_clip(clip)
         search.add_clip(clip)
 
-        return redirect(url_for('show_clip', clip_id=clip.id))
+        return redirect(url_for('views.show_clip', clip_id=clip.id))
 
-    return render_template('upload.html', form=form, post_url=url_for('edit_clip', clip_id=clip_id), title='Edit your clip')
+    return render_template('upload.html', form=form, post_url=url_for('views.edit_clip', clip_id=clip_id), title='Edit your clip')
