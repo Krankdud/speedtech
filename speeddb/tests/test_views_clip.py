@@ -1,68 +1,12 @@
-import os
-import shutil
-import tempfile
 import unittest
 import unittest.mock as mock
 from flask import Markup
-from speeddb import constants as cn, create_app, db
+from speeddb import constants as cn
 from speeddb.models.clips import Clip
-from speeddb.models.user import User
+from speeddb.tests.base_test_case import BaseTestCase
+from speeddb.tests.constants import *
 
-CLIP_TITLE = 'Title'
-CLIP_TITLE_EDIT = 'Editted Title'
-CLIP_DESCRIPTION = 'Description'
-CLIP_DESCRIPTION_EDIT = 'Editted Description'
-CLIP_URL_YOUTUBE = 'https://www.youtube.com/watch?v=2VMgxLLbYEs'
-CLIP_URL_TWITCH = 'https://clips.twitch.tv/DeafFrailWitchWoofer'
-CLIP_URL_TWITTER = 'https://twitter.com/Krankdud/status/957171192980373507'
-CLIP_TAGS = 'tag1,tag2,tag3'
-CLIP_TAGS_EDIT = 'edit1,edit2,edit3'
-
-USER_NAME = 'user'
-USER_PASSWORD = 'Password1'
-USER_EMAIL = 'user@email.com'
-OTHER_USER_NAME = 'user2'
-OTHER_USER_PASSWORD = 'Password1'
-OTHER_USER_EMAIL = 'user2@email.com'
-
-class ViewsTestCase(unittest.TestCase):
-    def setUp(self):
-        self.db_fd, db_path = tempfile.mkstemp()
-        self.app = create_app(dict(
-            TESTING=True,
-
-            SQLALCHEMY_DATABASE_URI='sqlite:///' + db_path,
-            WHOOSH_INDEX=tempfile.mkdtemp(),
-
-            WTF_CSRF_ENABLED=False,
-
-            USER_ENABLE_CONFIRM_EMAIL=False,
-            USER_ENABLE_LOGIN_WITHOUT_CONFIRM_EMAIL=True,
-
-            MAIL_SUPPRESS_SEND=True
-        ))
-        self.app_context = self.app.app_context()
-        self.app_context.push()
-        db.drop_all()
-        db.create_all()
-        self.client = self.app.test_client()
-
-    def tearDown(self):
-        self.app_context.pop()
-        os.close(self.db_fd)
-        shutil.rmtree(self.app.config['WHOOSH_INDEX'])
-
-    def register(self, username=USER_NAME, email=USER_EMAIL, password=USER_PASSWORD):
-        return self.client.post('/user/register', data=dict(username=username, email=email, password=password, retype_password=password), follow_redirects=True)
-
-    def login(self, username=USER_NAME, password=USER_PASSWORD):
-        return self.client.post('/user/sign-in', data=dict(username=username, password=password), follow_redirects=True)
-
-    def create_test_clip(self, user_id=1):
-        clip = Clip(title=CLIP_TITLE, description=CLIP_DESCRIPTION, url=CLIP_URL_YOUTUBE, user_id=user_id)
-        db.session.add(clip)
-        db.session.commit()
-
+class ViewsTestCase(BaseTestCase):
     def test_index(self):
         response = self.client.get('/')
         self.assertEqual(response.status_code, 200)

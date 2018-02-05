@@ -12,4 +12,5 @@ setup(
         'flask-user',
         'pyembed'
     ],
+    test_suite="speeddb.tests"
 )
