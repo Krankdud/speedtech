@@ -4,6 +4,7 @@ import tempfile
 import unittest
 from speeddb import create_app, db
 from speeddb.models.clips import Clip
+from speeddb.models.tags import Tag
 from speeddb.tests.constants import *
 
 class BaseTestCase(unittest.TestCase):
@@ -41,5 +42,9 @@ class BaseTestCase(unittest.TestCase):
 
     def create_test_clip(self, user_id=1):
         clip = Clip(title=CLIP_TITLE, description=CLIP_DESCRIPTION, url=CLIP_URL_YOUTUBE, user_id=user_id)
+        tag = Tag.query.filter_by(name=TAG_NAME).first()
+        if tag is None:
+            tag = Tag(name=TAG_NAME)
+        clip.tags.append(tag)
         db.session.add(clip)
         db.session.commit()

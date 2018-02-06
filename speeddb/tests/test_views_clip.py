@@ -6,7 +6,7 @@ from speeddb.models.clips import Clip
 from speeddb.tests.base_test_case import BaseTestCase
 from speeddb.tests.constants import *
 
-class ViewsTestCase(BaseTestCase):
+class ViewClipTestCase(BaseTestCase):
     def test_index(self):
         response = self.client.get('/')
         self.assertEqual(response.status_code, 200)

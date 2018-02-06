@@ -1,6 +1,6 @@
 from speeddb import forms, mail
 from speeddb.views import blueprint
-from flask import render_template
+from flask import current_app as app, render_template
 from flask_mail import Message
 
 @blueprint.route('/report', methods=['POST'])
