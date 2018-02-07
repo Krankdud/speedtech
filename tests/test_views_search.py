@@ -1,7 +1,7 @@
 import unittest
 import unittest.mock as mock
-from speeddb.tests.base_test_case import BaseTestCase
-from speeddb.tests.constants import *
+from tests.base_test_case import BaseTestCase
+from tests.constants import *
 
 class ViewSearchTestCase(BaseTestCase):
     def test_show_tag_page(self):
@@ -31,11 +31,12 @@ class ViewSearchTestCase(BaseTestCase):
 
         self.register()
         self.create_test_clip()
-        response = self.client.get('/search?q=' + TAG_NAME, follow_redirects=True)
+        response = self.client.get('/search?q=' + CLIP_TITLE, follow_redirects=True)
         self.assertEqual(response.status_code, 200)
+        mock_oembed_cache.assert_called()
 
     def test_search_clips_invalid_page(self):
-        response = self.client.get('/search?q=' + TAG_NAME + '&page=a', follow_redirects=True)
+        response = self.client.get('/search?q=' + CLIP_TITLE + '&page=a', follow_redirects=True)
         self.assertEqual(response.status_code, 400)
 
     def test_search_clips_redirect_to_index(self):

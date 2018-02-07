@@ -51,14 +51,14 @@ def create_app(extra_config_options={}):
         g.user = current_user
 
     @app.cli.command()
-    def init_db():
+    def init_db(): # pragma: no cover
         click.echo('Creating the db...')
         click.echo(app.config['SQLALCHEMY_DATABASE_URI'])
         db.create_all()
         click.echo('Done!')
 
     @app.cli.command()
-    def rebuild_index():
+    def rebuild_index(): # pragma: no cover
         from speeddb.models.clips import Clip
 
         click.echo('Removing whoosh directory...')

@@ -1,0 +1,3 @@
+[run]
+omit=speeddb/application.py
+source=speeddb

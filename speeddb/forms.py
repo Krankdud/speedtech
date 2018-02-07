@@ -19,10 +19,10 @@ class UploadForm(FlaskForm):
     url = StringField(u'URL', [DataRequired(), URL(), Length(max=cn.CLIP_URL_LENGTH)])
     tags = StringField(u'Tags')
 
-    def validate_tags(form, field):
+    def validate_tags(self, tags_field):
         """ Validates that each tag is within the character limit. """
 
-        tag_list = field.data.split(',')
+        tag_list = tags_field.data.split(',')
         for tag in tag_list:
             if len(tag) > cn.TAG_NAME_LENGTH:
                 raise ValidationError('Tag must be less than %d characters' % cn.TAG_NAME_LENGTH)

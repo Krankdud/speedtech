@@ -2,10 +2,10 @@ import os
 import shutil
 import tempfile
 import unittest
-from speeddb import create_app, db
+from speeddb import create_app, db, search
 from speeddb.models.clips import Clip
 from speeddb.models.tags import Tag
-from speeddb.tests.constants import *
+from tests.constants import *
 
 class BaseTestCase(unittest.TestCase):
     def setUp(self):
@@ -48,3 +48,4 @@ class BaseTestCase(unittest.TestCase):
         clip.tags.append(tag)
         db.session.add(clip)
         db.session.commit()
+        search.add_clip(clip)

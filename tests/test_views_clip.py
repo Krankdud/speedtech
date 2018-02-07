@@ -3,8 +3,8 @@ import unittest.mock as mock
 from flask import Markup
 from speeddb import constants as cn
 from speeddb.models.clips import Clip
-from speeddb.tests.base_test_case import BaseTestCase
-from speeddb.tests.constants import *
+from tests.base_test_case import BaseTestCase
+from tests.constants import *
 
 class ViewClipTestCase(BaseTestCase):
     def test_index(self):

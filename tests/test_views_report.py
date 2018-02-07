@@ -1,7 +1,7 @@
 import unittest
 import unittest.mock as mock
-from speeddb.tests.base_test_case import BaseTestCase
-from speeddb.tests.constants import *
+from tests.base_test_case import BaseTestCase
+from tests.constants import *
 
 class ViewReportTestCase(BaseTestCase):
     @mock.patch('speeddb.views.report.mail.send', autospec=True)

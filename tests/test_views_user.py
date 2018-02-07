@@ -1,6 +1,6 @@
 import unittest
-from speeddb.tests.base_test_case import BaseTestCase
-from speeddb.tests.constants import *
+from tests.base_test_case import BaseTestCase
+from tests.constants import *
 
 class ViewUserTestCase(BaseTestCase):
     def test_user_profile_page(self):

@@ -20,3 +20,5 @@ OTHER_USER_EMAIL = 'user2@email.com'
 
 REPORT_REASON = 'content'
 REPORT_DESCRIPTION = 'Description'
+
+OEMBED_MARKUP = 'embed html'
