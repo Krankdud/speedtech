@@ -3,7 +3,7 @@ import os
 import whoosh.index as index
 import whoosh.fields as fields
 import whoosh.qparser as qparser
-import speeddb.constants as cn
+from speeddb import constants as cn, statsd
 from speeddb.models.clips import Clip
 
 clip_index = None
@@ -21,6 +21,7 @@ def create_index(directory):
         schema = fields.Schema(id=fields.NUMERIC(stored=True), title=fields.TEXT, description=fields.TEXT, tags=fields.TEXT(stored=True), user=fields.TEXT)
         clip_index = index.create_in(directory, schema)
 
+@statsd.timer('search.add_clip')
 def add_clip(clip):
     ''' add_clip adds the given clip to the index '''
     writer = clip_index.writer()
@@ -54,12 +55,14 @@ def add_clips(clips):
     
     writer.commit()
 
+@statsd.timer('search.remove_clip')
 def remove_clip(clip):
     ''' remove_clip removes the given clip from the index '''
     writer = clip_index.writer()
     writer.delete_by_term('id', clip.id)
     writer.commit()
 
+@statsd.timer('search.search_clips')
 def search_clips(query, page):
     ''' search_clips returns the clips found by the given query
     Clips are stored in a named tuple called ClipSearchResults.

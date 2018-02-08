@@ -1,4 +1,4 @@
-from speeddb import forms, oembed_cache, pagination, search
+from speeddb import forms, oembed_cache, pagination, search, statsd
 from speeddb.views import blueprint
 from speeddb.models.tags import Tag
 from flask import abort, redirect, render_template, request, url_for
@@ -9,6 +9,7 @@ def show_tag(tag_name):
 
 @blueprint.route('/tag/<tag_name>/<int:page>')
 def show_tag_page(tag_name, page):
+    statsd.incr('views.tag')
     tag = Tag.query.filter_by(name=tag_name).first()
     if tag is None:
         abort(404)
@@ -22,6 +23,7 @@ def show_tag_page(tag_name, page):
 
 @blueprint.route('/search')
 def search_clips():
+    statsd.incr('views.search')
     query = request.args.get('q')
     if query == None:
         return redirect(url_for('views.index'))

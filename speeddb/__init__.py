@@ -7,10 +7,12 @@ from flask_mail import Mail
 from flask_sqlalchemy import SQLAlchemy
 from flask_user import UserManager, SQLAlchemyAdapter, current_user
 from flask_wtf import CSRFProtect
+from statsd import StatsClient
 
 mail = Mail()
 db = SQLAlchemy()
 csrf = CSRFProtect()
+statsd = None
 
 def create_app(extra_config_options={}):
     # Create the flask app
@@ -23,6 +25,9 @@ def create_app(extra_config_options={}):
         file_handler = TimedRotatingFileHandler(app.config['LOGGER_FILENAME'], when='midnight')
         file_handler.setLevel(logging.WARNING)
         app.logger.addHandler(file_handler)
+
+    global statsd
+    statsd = StatsClient(host = app.config['STATSD_HOST'], port = app.config['STATSD_PORT'], prefix = app.config['STATSD_PREFIX'])
 
     # Setup mail
     mail.init_app(app)

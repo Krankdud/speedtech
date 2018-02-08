@@ -1,4 +1,4 @@
-from speeddb import db, forms, oembed_cache, search
+from speeddb import db, forms, oembed_cache, search, statsd
 from speeddb.views import blueprint
 from speeddb.models.clips import Clip
 from speeddb.models.tags import Tag
@@ -8,6 +8,7 @@ from flask_user import current_user, login_required
 @blueprint.route('/upload', methods=['GET', 'POST'])
 @login_required
 def upload_clip():
+    statsd.incr('views.clip.upload')
     form = forms.UploadForm()
 
     if request.method == 'POST' and form.validate():
@@ -22,10 +23,13 @@ def upload_clip():
             
                 clip.tags.append(tag)
 
-        db.session.add(clip)
-        db.session.commit()
+        with statsd.timer('db.clip.add'):
+            db.session.add(clip)
+            db.session.commit()
 
         search.add_clip(clip)
+
+        statsd.incr('clip.upload')
 
         return redirect(url_for('views.show_clip', clip_id=clip.id))
 
@@ -33,6 +37,7 @@ def upload_clip():
 
 @blueprint.route('/clip/<int:clip_id>')
 def show_clip(clip_id):
+    statsd.incr('views.clip.show')
     clip = Clip.query.get(clip_id)
     if clip is None:
         abort(404)
@@ -46,6 +51,7 @@ def show_clip(clip_id):
 @blueprint.route('/clip/<int:clip_id>/edit', methods=['GET', 'POST'])
 @login_required
 def edit_clip(clip_id):
+    statsd.incr('views.clip.edit')
     clip = Clip.query.get(clip_id)
 
     if clip.user.id != current_user.id:
@@ -71,11 +77,14 @@ def edit_clip(clip_id):
             
                 clip.tags.append(tag)
 
-        db.session.add(clip) 
-        db.session.commit()
+        with statsd.timer('db.clip.edit'):
+            db.session.add(clip) 
+            db.session.commit()
 
         search.remove_clip(clip)
         search.add_clip(clip)
+    
+        statsd.incr('clip.edit')
 
         return redirect(url_for('views.show_clip', clip_id=clip.id))
 
