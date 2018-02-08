@@ -1,4 +1,6 @@
 import click
+import logging
+from logging.handlers import TimedRotatingFileHandler
 import shutil
 from flask import Flask, g
 from flask_mail import Mail
@@ -16,6 +18,11 @@ def create_app(extra_config_options={}):
     app.config.from_object('speeddb.default_settings')
     app.config.from_pyfile('application.cfg', silent=True)
     app.config.from_mapping(extra_config_options)
+
+    if app.config['ENABLE_LOGGING']: # pragma: no cover
+        file_handler = TimedRotatingFileHandler(app.config['LOGGER_FILENAME'], when='midnight')
+        file_handler.setLevel(logging.WARNING)
+        app.logger.addHandler(file_handler)
 
     # Setup mail
     mail.init_app(app)

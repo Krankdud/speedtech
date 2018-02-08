@@ -21,7 +21,9 @@ class BaseTestCase(unittest.TestCase):
             USER_ENABLE_CONFIRM_EMAIL=False,
             USER_ENABLE_LOGIN_WITHOUT_CONFIRM_EMAIL=True,
 
-            MAIL_SUPPRESS_SEND=True
+            MAIL_SUPPRESS_SEND=True,
+
+            ENABLE_LOGGING = False
         ))
         self.app_context = self.app.app_context()
         self.app_context.push()
