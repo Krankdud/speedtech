@@ -1,6 +1,6 @@
 {% macro pagination(page_url, current_page, page_count) -%}
 <nav aria-label="Search result pages">
-    <ul class="pagination justify-content-center">
+    <ul class="pagination justify-content-center mt-4">
         {% if current_page <= 1 %}
             <li class="page-item disabled"><a class="page-link" href="{{ page_url|format(current_page - 1) }}" tabindex="-1">Previous</a></li>
         {% else %}

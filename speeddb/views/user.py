@@ -1,5 +1,6 @@
-from speeddb import db, forms, pagination, statsd
+from speeddb import constants as cn, db, forms, pagination, statsd
 from speeddb.views import blueprint
+from speeddb.models.clips import Clip
 from speeddb.models.user import User
 from flask import abort, redirect, render_template, request, url_for
 from flask_user import current_user, login_required
@@ -15,12 +16,12 @@ def user_profile_page(username, page):
     if user == None:
         abort(404)
 
-    clips = pagination.get_clips_on_page(user.clips, page)
-    page_count = pagination.get_page_count(len(user.clips))
+    clips = user.clips.order_by(Clip.time_created.desc()).paginate(page, cn.SEARCH_CLIPS_PER_PAGE)
+    pagination.fetch_embeds_for_clips(clips.items)
     
     report_form = forms.ReportForm()
 
-    return render_template('user.html', user=user, clips=clips, page=page, page_count=page_count, report_form=report_form)
+    return render_template('user.html', user=user, clips=clips.items, page=page, page_count=clips.pages, report_form=report_form)
 
 @blueprint.route('/user/edit-profile', methods=['GET', 'POST'])
 @login_required

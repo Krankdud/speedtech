@@ -20,4 +20,4 @@ class User(db.Model, UserMixin):
     discord = db.Column(db.String(cn.USER_DISCORD_LENGTH), nullable=True)
     speedruncom = db.Column(db.String(cn.USER_SPEEDRUNCOM_LENGTH), nullable=True)
 
-    clips = db.relationship('Clip', backref='user', lazy=True)
+    clips = db.relationship('Clip', backref='user', lazy='dynamic')

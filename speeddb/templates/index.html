@@ -1,6 +1,20 @@
 {% extends "base.html" %}
-{% block title %}Index{% endblock %}
+{% from 'search/result.html' import search_result %}
+{% block title %}Home{% endblock %}
 {% block content %}
-<h1>Bootstrap starter template</h1>
-<p class="lead">Use this document as a way to quickly start any new project.<br> All you get is this text and a mostly barebones HTML document.</p>
+<h1>Welcome to Odyssey SpeedTech!</h1>
+<div class="home-welcome lead mb-4">
+    Odyssey SpeedTech is a repository of speedrunning related video clips for Super Mario Odyssey. There are currently {{ clip_count }} clips in the database!
+</div>
+<div class="home-get-started mb-5">
+    <form action="/search" class="form-inline" role="search">
+        Get started by: <a class="btn btn-primary ml-2 mr-2" href="{{ url_for('views.upload_clip') }}" role="button">Uploading a clip</a> or
+        <input class="form-control ml-2 mr-2" type="text" name="q" placeholder="Search for clips!" aria-label="Search">
+        <button class="btn btn-primary" type="submit">Search</button>
+    </form>
+</div>
+<h1>Recently added clips</h1>
+{% for clip in clips %}
+    {{ search_result(clip, loop.index) }}
+{% endfor %}
 {% endblock %}

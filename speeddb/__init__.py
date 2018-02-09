@@ -12,7 +12,7 @@ from statsd import StatsClient
 mail = Mail()
 db = SQLAlchemy()
 csrf = CSRFProtect()
-statsd = None
+statsd = StatsClient()
 
 def create_app(extra_config_options={}):
     # Create the flask app
