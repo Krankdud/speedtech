@@ -9,8 +9,8 @@ def show_tag(tag_name):
     return redirect(url_for('views.show_tag_page', tag_name=tag_name, page=1))
 
 @blueprint.route('/tag/<tag_name>/<int:page>')
+@statsd.timer('views.tags.page')
 def show_tag_page(tag_name, page):
-    statsd.incr('views.tag')
     tag = Tag.query.filter_by(name=tag_name).first_or_404()
 
     clips = tag.clips.order_by(Clip.time_created.desc()).paginate(page, cn.SEARCH_CLIPS_PER_PAGE)
@@ -21,8 +21,8 @@ def show_tag_page(tag_name, page):
     return render_template('tag.html', clips=clips.items, search_query='Tag: %s' % tag.name, tag_name=tag.name, page=page, page_count=clips.pages, report_form = report_form)
 
 @blueprint.route('/search')
+@statsd.timer('views.search.page')
 def search_clips():
-    statsd.incr('views.search')
     query = request.args.get('q')
     if query == None:
         return redirect(url_for('views.index'))

@@ -4,6 +4,7 @@ from flask import current_app as app, render_template
 from flask_mail import Message
 
 @blueprint.route('/report', methods=['POST'])
+@statsd.timer('views.report')
 def report():
     form = forms.ReportForm()
     if form.validate():

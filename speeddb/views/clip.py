@@ -7,8 +7,8 @@ from flask_user import current_user, login_required
 
 @blueprint.route('/upload', methods=['GET', 'POST'])
 @login_required
+@statsd.timer('views.clip.upload')
 def upload_clip():
-    statsd.incr('views.clip.upload')
     form = forms.UploadForm()
 
     if request.method == 'POST' and form.validate():
@@ -36,8 +36,8 @@ def upload_clip():
     return render_template('upload.html', form=form, post_url=url_for('views.upload_clip'), title='Submit a clip')
 
 @blueprint.route('/clip/<int:clip_id>')
+@statsd.timer('views.clip.show')
 def show_clip(clip_id):
-    statsd.incr('views.clip.show')
     clip = Clip.query.get(clip_id)
     if clip is None:
         abort(404)
@@ -50,8 +50,8 @@ def show_clip(clip_id):
 
 @blueprint.route('/clip/<int:clip_id>/edit', methods=['GET', 'POST'])
 @login_required
+@statsd.timer('views.clip.edit')
 def edit_clip(clip_id):
-    statsd.incr('views.clip.edit')
     clip = Clip.query.get(clip_id)
 
     if clip.user.id != current_user.id:

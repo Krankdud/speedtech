@@ -16,4 +16,4 @@ class Clip(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     url = db.Column(db.String(cn.CLIP_URL_LENGTH), nullable=False)
 
-    tags = db.relationship('Tag', secondary=clip_tags, lazy='subquery', backref=db.backref('clips', lazy='dynamic'))
+    tags = db.relationship('Tag', secondary=clip_tags, lazy='joined', backref=db.backref('clips', lazy='dynamic'))
