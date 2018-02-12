@@ -5,7 +5,7 @@ from speeddb.models.tags import Tag
 import speeddb.search as search
 from faker import Faker
 
-NUM_OF_ENTRIES = 10000
+NUM_OF_ENTRIES = 50000
 
 def main():
     app = create_app()

@@ -33,7 +33,9 @@
         </div>
     </div>
     <div class="col-md-8">
-        <h1>Clips</h1> 
+        <div class="mb-4">
+            <h1>Clips</h1> 
+        </div>
         {% if page_count > 0 %}
             {% for clip in clips %}
                 {{ search_result(clip, loop.index, show_user=false) }}

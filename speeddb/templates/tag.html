@@ -4,6 +4,9 @@
 
 {% block title %}{{ search_query }}{% endblock %}
 {% block content %}
+<div class="tag-title mb-4">
+    <h3>Showing clips tagged with: {{ tag_name }}</h3>
+</div>
 {% if page_count > 0 %}
     {% for clip in clips %}
         {{ search_result(clip, loop.index) }}

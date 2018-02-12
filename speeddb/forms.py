@@ -1,4 +1,6 @@
 from flask_wtf import FlaskForm
+from flask_wtf.recaptcha import RecaptchaField
+from flask_user.forms import RegisterForm
 from wtforms import IntegerField, RadioField, StringField, TextAreaField
 from wtforms.validators import DataRequired, Length, URL, ValidationError
 from wtforms.widgets import HiddenInput
@@ -42,3 +44,7 @@ class ReportForm(FlaskForm):
     clip_id = IntegerField(u'Clip ID', [DataRequired()], id='report-clip-id', widget=HiddenInput())
     reason = RadioField(u'Reason', [DataRequired()], id='report-reason', choices=[('content', 'Sexual or violent content'), ('not_speedrun', 'Not related to speedrunning'), ('spam', 'Spam'), ('other', 'Other')])
     description = TextAreaField(u'Description', [Length(max=cn.REPORT_DESCRIPTION_LENGTH)], id='report-description')
+
+class RecaptchaRegisterForm(RegisterForm):
+    """ RecaptchaRegisterForm is the register form from flask-user with recaptcha added to it """
+    recaptcha = RecaptchaField()

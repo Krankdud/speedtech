@@ -8,6 +8,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_user import UserManager, SQLAlchemyAdapter, current_user
 from flask_wtf import CSRFProtect
 from statsd import StatsClient
+from speeddb import forms
 
 mail = Mail()
 db = SQLAlchemy()
@@ -22,7 +23,7 @@ def create_app(extra_config_options={}):
     app.config.from_mapping(extra_config_options)
 
     if app.config['ENABLE_LOGGING']: # pragma: no cover
-        file_handler = TimedRotatingFileHandler(app.config['LOGGER_FILENAME'], when='midnight')
+        file_handler = TimedRotatingFileHandler(app.config['LOG_FILENAME'], when='midnight')
         file_handler.setLevel(logging.WARNING)
         app.logger.addHandler(file_handler)
 
@@ -56,7 +57,7 @@ def create_app(extra_config_options={}):
 
     # Register the user class
     db_adapter = SQLAlchemyAdapter(db, User)
-    user_manager = UserManager(db_adapter, app)
+    user_manager = UserManager(db_adapter, app, register_form = forms.RecaptchaRegisterForm)
 
     @app.before_request
     def before_request():

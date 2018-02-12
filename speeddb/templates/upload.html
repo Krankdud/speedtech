@@ -1,53 +1,14 @@
 {% extends "base.html" %}
+{% from "fields.html" import render_field %}
 {% block title %}{{ title }}{% endblock %}
 {% block content %}
 <h1>{{ title }}</h1>
 <form action="{{ post_url }}" method="post" role="form">
 	{{ form.csrf_token }}
-	<div class="form-group">
-		{{ form.title.label }}
-		{% if form.title.errors %}
-			{{ form.title(class="form-control is-invalid", placeholder="Title") }}
-			<div class="invalid-feedback">
-				{% for error in form.title.errors %}{{ error }}{% endfor %}
-			</div>
-		{% else %}
-			{{ form.title(class="form-control", placeholder="Title") }}
-		{% endif %}
-	</div>
-	<div class="form-group">
-		{{ form.description.label }}
-		{% if form.description.errors %}
-			{{ form.description(class="form-control is-invalid", placeholder="Description", rows="3") }}
-			<div class="invalid-feedback">
-				{% for error in form.description.errors %}{{ error }}{% endfor %}
-			</div>
-		{% else %}
-			{{ form.description(class="form-control", placeholder="Description", rows="3") }}
-		{% endif %}
-	</div>
-	<div class="form-group">
-		{{ form.url.label }}
-		{% if form.url.errors %}
-			{{ form.url(class="form-control is-invalid", placeholder="Link to video (Youtube, Twitter, Twitch)") }}
-			<div class="invalid-feedback">
-				{% for error in form.url.errors %}{{ error }}{% endfor %}
-			</div>
-		{% else %}
-			{{ form.url(class="form-control", placeholder="Link to video (Youtube, Twitter, Twitch)") }}
-		{% endif %}
-	</div>
-	<div class="form-group">
-		{{ form.tags.label }}
-		{% if form.tags.errors %}
-			{{ form.tags(class="form-control is-invalid", **{'data-role': 'tagsinput'}) }}
-			<div class="invalid-feedback">
-				{% for error in form.tags.errors %}{{ error }}{% endfor %}
-			</div>
-		{% else %}
-			{{ form.tags(class="form-control", **{'data-role': 'tagsinput'}) }}
-		{% endif %}
-	</div>
+	{{ render_field(form.title, placeholder='Title') }}
+	{{ render_field(form.description, placeholder='Description') }}
+	{{ render_field(form.url, placeholder='Link to video (YouTube, Twitter, Twitch)') }}
+	{{ render_field(form.tags, **{'data-role': 'tagsinput'}) }}
 	<div class="form-group">
 		<button type="submit" class="btn btn-primary">Submit</button>
 	</div>
