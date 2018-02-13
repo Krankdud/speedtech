@@ -57,7 +57,7 @@ def create_app(extra_config_options={}):
 
     # Register the user class
     db_adapter = SQLAlchemyAdapter(db, User)
-    user_manager = UserManager(db_adapter, app, register_form = forms.RecaptchaRegisterForm)
+    user_manager = UserManager(db_adapter, app, register_form=forms.RecaptchaRegisterForm, login_form=forms.LoginFormWithBans)
 
     @app.before_request
     def before_request():
@@ -88,7 +88,7 @@ def create_app(extra_config_options={}):
 
     @app.cli.command()
     @click.argument('name')
-    def add_role(name):
+    def add_role(name): #pragma: no cover
         if len(name) <= 0 or len(name) > cn.ROLE_NAME_LENGTH:
             click.echo('Name must be between 0 and %d characters' % cn.ROLE_NAME_LENGTH)
             return
@@ -102,7 +102,7 @@ def create_app(extra_config_options={}):
     @app.cli.command()
     @click.argument('role_id')
     @click.argument('user_id')
-    def add_role_to_user(role_id, user_id):
+    def add_role_to_user(role_id, user_id): #pragma: no cover
         from speeddb.models.user import Role
 
         user = User.query.get(user_id)

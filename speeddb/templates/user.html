@@ -7,6 +7,11 @@
 <div class="row">
     <div class="col">
         <h1>{{ user.username }}</h1>
+        {% if user.banned %}
+        <div class="user-ban">
+            This user is banned.
+        </div>
+        {% endif %}
         <div class="user-social-media">
             <ul>
                 {% if user.twitter is not none %}
@@ -31,6 +36,14 @@
                 <a href="{{ url_for('views.user_edit_profile') }}">Edit profile</a>
             {% endif %}
         </div>
+        {% if g.user_is_admin %}
+            <div class="mt-5">
+                Administration tools:
+            </div>
+            <div>
+                <a href="#" data-toggle="modal" data-target="#ban-modal">Ban user</a>
+            </div>
+        {% endif %}
     </div>
     <div class="col-md-8">
         <div class="mb-4">
@@ -47,4 +60,32 @@
     </div>
 </div>
 {% include "report.html" %}
+
+{% if g.user.is_authenticated and g.user_is_admin %}
+<div class="modal fade" id="ban-modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Ban user</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="{{ url_for('views.ban_user') }}" method="POST" role="form">
+                <div class="modal-body">
+                    {{ ban_form.csrf_token }}
+                    {{ ban_form.user_id }}
+                    Are you sure you want to ban {{ user.username }}?
+                </div>
+                <div class="modal-footer">
+                    <div class="form-group">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endif %}
 {% endblock %}

@@ -3,7 +3,7 @@ from speeddb.views import blueprint
 from speeddb.models.clips import Clip
 from speeddb.models.user import User
 from flask import abort, redirect, render_template, request, url_for
-from flask_user import current_user, login_required
+from flask_user import current_user, login_required, roles_required
 
 @blueprint.route('/user/<username>')
 def user_profile(username):
@@ -20,8 +20,9 @@ def user_profile_page(username, page):
     pagination.fetch_embeds_for_clips(clips.items)
     
     report_form = forms.ReportForm()
+    ban_form = forms.BanUserForm(user_id=user.id)
 
-    return render_template('user.html', user=user, clips=clips.items, page=page, page_count=clips.pages, report_form=report_form)
+    return render_template('user.html', user=user, clips=clips.items, page=page, page_count=clips.pages, report_form=report_form, ban_form=ban_form)
 
 @blueprint.route('/user/edit-profile', methods=['GET', 'POST'])
 @login_required
@@ -46,3 +47,17 @@ def user_edit_profile():
         return redirect(url_for('views.user_profile_page', username=current_user.username, page=1))
     
     return render_template('edit_profile.html', user=current_user, form=form, post_url=url_for('views.user_edit_profile'))
+
+@blueprint.route('/user/ban', methods=['POST'])
+@login_required
+@roles_required('admin')
+def ban_user():
+    form = forms.BanUserForm()
+    user = User.query.get(form.user_id.data)
+    if user == None:
+        abort(404)
+
+    user.banned = True
+    db.session.add(user)
+    db.session.commit()
+    return redirect(url_for('views.user_profile_page', username=user.username, page=1))

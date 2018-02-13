@@ -1,7 +1,8 @@
 import unittest
 import unittest.mock as mock
 from wtforms.validators import ValidationError
-from speeddb import constants as cn, forms
+from speeddb import constants as cn, db, forms
+from speeddb.models.user import User
 from tests.base_test_case import BaseTestCase
 from tests.constants import *
 
@@ -22,6 +23,22 @@ class FormsTestCase(BaseTestCase):
         field_mock = mock.Mock(data=tags)
         with self.assertRaises(ValidationError):
             form.validate_tags(field_mock)
+
+    def test_validate_regular_user(self):
+        self.register()
+
+        form = forms.LoginFormWithBans(username=USER_NAME, password=USER_PASSWORD)
+        self.assertTrue(form.validate())
+
+    def test_validate_banned_user(self):
+        self.register()
+        user = User.query.get(1)
+        user.banned = True
+        db.session.add(user)
+        db.session.commit()
+
+        form = forms.LoginFormWithBans(username=USER_NAME, password=USER_PASSWORD)
+        self.assertFalse(form.validate())
 
 if __name__ == '__main__':
     unittest.main()

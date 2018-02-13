@@ -1,6 +1,7 @@
+from flask import current_app
 from flask_wtf import FlaskForm
 from flask_wtf.recaptcha import RecaptchaField
-from flask_user.forms import RegisterForm
+from flask_user.forms import LoginForm, RegisterForm
 from wtforms import IntegerField, RadioField, StringField, TextAreaField
 from wtforms.validators import DataRequired, Length, URL, ValidationError
 from wtforms.widgets import HiddenInput
@@ -33,6 +34,10 @@ class DeleteClipForm(FlaskForm):
     """ DeleteClipForm is used to delete a clip """
     clip_id = IntegerField(u'Clip ID', [DataRequired()], id='delete-clip-id', widget=HiddenInput())
 
+class BanUserForm(FlaskForm):
+    """ BanUserForm is used for banning a user """
+    user_id = IntegerField(u'User ID', [DataRequired()], widget=HiddenInput())
+
 class EditProfileForm(FlaskForm):
     """ EditProfileForm is the form used to update a user's profile """
 
@@ -52,3 +57,22 @@ class ReportForm(FlaskForm):
 class RecaptchaRegisterForm(RegisterForm):
     """ RecaptchaRegisterForm is the register form from flask-user with recaptcha added to it """
     recaptcha = RecaptchaField()
+
+class LoginFormWithBans(LoginForm):
+    """ LoginFormWithBans is a flask-user LoginForm that checks if a user is banned while validating """
+    def validate(self):
+        valid_user = super().validate()
+        if valid_user:
+            user_manager = current_app.user_manager
+            user = None
+            user_email = None
+
+            user = user_manager.find_user_by_username(self.username.data)
+            if not user:
+                user, user_email = user_manager.find_user_by_email(self.email.data)
+
+            if user and user.banned:
+                self.username.errors.append('%s is banned' % user.username)
+                return False
+
+        return valid_user

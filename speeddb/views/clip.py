@@ -9,6 +9,9 @@ from flask_user import current_user, login_required
 @login_required
 @statsd.timer('views.clip.upload')
 def upload_clip():
+    if current_user.banned:
+        abort(403)
+    
     form = forms.UploadForm()
 
     if request.method == 'POST' and form.validate():

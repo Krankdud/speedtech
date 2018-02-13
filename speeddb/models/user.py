@@ -13,6 +13,7 @@ class User(db.Model, UserMixin):
     username = db.Column(db.String(cn.USER_NAME_LENGTH), unique=True, nullable=False)
     password = db.Column(db.String(cn.USER_PASSWORD_LENGTH), nullable=False, server_default='')
     active = db.Column(db.Boolean(), nullable=False, server_default='0')
+    banned = db.Column(db.Boolean(), nullable=False, server_default='0')
 
     # Email 
     email = db.Column(db.String(cn.USER_EMAIL_LENGTH), unique=True, nullable=False)
