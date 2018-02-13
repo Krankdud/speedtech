@@ -8,7 +8,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_user import UserManager, SQLAlchemyAdapter, current_user
 from flask_wtf import CSRFProtect
 from statsd import StatsClient
-from speeddb import forms
+from speeddb import constants as cn, forms, util
 
 mail = Mail()
 db = SQLAlchemy()
@@ -62,11 +62,11 @@ def create_app(extra_config_options={}):
     @app.before_request
     def before_request():
         g.user = current_user
+        g.user_is_admin = util.is_admin(current_user)
 
     @app.cli.command()
     def init_db(): # pragma: no cover
         click.echo('Creating the db...')
-        click.echo(app.config['SQLALCHEMY_DATABASE_URI'])
         db.create_all()
         click.echo('Done!')
 
@@ -84,6 +84,40 @@ def create_app(extra_config_options={}):
         clips = Clip.query.all()
         search.add_clips(clips)
 
+        click.echo('Done!')
+
+    @app.cli.command()
+    @click.argument('name')
+    def add_role(name):
+        if len(name) <= 0 or len(name) > cn.ROLE_NAME_LENGTH:
+            click.echo('Name must be between 0 and %d characters' % cn.ROLE_NAME_LENGTH)
+            return
+
+        from speeddb.models.user import Role
+        role = Role(name=name)
+        db.session.add(role)
+        db.session.commit()
+        click.echo('Created role "%s" (id: %d)' % (role.name, role.id))
+
+    @app.cli.command()
+    @click.argument('role_id')
+    @click.argument('user_id')
+    def add_role_to_user(role_id, user_id):
+        from speeddb.models.user import Role
+
+        user = User.query.get(user_id)
+        if user == None:
+            click.echo('User not found')
+            return
+        
+        role = Role.query.get(role_id)
+        if role == None:
+            click.echo('Role not found')
+
+        click.echo('Adding role %s to %s' % (role.name, user.username))
+        user.roles.append(role)
+        db.session.add(user)
+        db.session.commit()
         click.echo('Done!')
 
     return app

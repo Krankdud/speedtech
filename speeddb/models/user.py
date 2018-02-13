@@ -2,6 +2,11 @@ from flask_user import UserMixin
 from speeddb import constants as cn, db
 from speeddb.models.clips import Clip
 
+user_roles = db.Table('user_roles',
+    db.Column('user_id', db.Integer, db.ForeignKey('users.id'), primary_key=True),
+    db.Column('role_id', db.Integer, db.ForeignKey('roles.id'), primary_key=True)
+)
+
 class User(db.Model, UserMixin):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
@@ -21,3 +26,9 @@ class User(db.Model, UserMixin):
     speedruncom = db.Column(db.String(cn.USER_SPEEDRUNCOM_LENGTH), nullable=True)
 
     clips = db.relationship('Clip', backref='user', lazy='dynamic')
+    roles = db.relationship('Role', secondary='user_roles', backref=db.backref('users', lazy='dynamic'))
+
+class Role(db.Model):
+    __tablename__  = 'roles'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(cn.ROLE_NAME_LENGTH), unique=True)

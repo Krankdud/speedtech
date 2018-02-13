@@ -124,5 +124,23 @@ class ViewClipTestCase(BaseTestCase):
         response = self.client.post('/clip/1/edit', data=dict(title=CLIP_TITLE_EDIT, description=CLIP_DESCRIPTION_EDIT, url='a', tags=CLIP_TAGS_EDIT), follow_redirects=True)
         self.assertEqual(response.status_code, 403)
 
+    def test_delete_clip(self):
+        self.register()
+        clip = self.create_test_clip()
+
+        response = self.client.post('/clip/delete', data=dict(clip_id=clip.id), follow_redirects=True)
+        self.assertEqual(response.status_code, 200)
+        response = self.client.get('/clip/1', follow_redirects=True)
+        self.assertEqual(response.status_code, 404)
+
+    def test_delete_clip_not_authorized(self):
+        self.register()
+        clip = self.create_test_clip()
+        self.register(username=OTHER_USER_NAME, password=OTHER_USER_PASSWORD, email=OTHER_USER_EMAIL)
+        self.login(username=OTHER_USER_NAME, password=OTHER_USER_PASSWORD)
+
+        response = self.client.post('/clip/delete', data=dict(clip_id=clip.id), follow_redirects=True)
+        self.assertEqual(response.status_code, 403)
+
 if __name__ == '__main__':
     unittest.main()

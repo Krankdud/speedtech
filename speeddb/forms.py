@@ -29,6 +29,10 @@ class UploadForm(FlaskForm):
             if len(tag) > cn.TAG_NAME_LENGTH:
                 raise ValidationError('Tag must be less than %d characters' % cn.TAG_NAME_LENGTH)
 
+class DeleteClipForm(FlaskForm):
+    """ DeleteClipForm is used to delete a clip """
+    clip_id = IntegerField(u'Clip ID', [DataRequired()], id='delete-clip-id', widget=HiddenInput())
+
 class EditProfileForm(FlaskForm):
     """ EditProfileForm is the form used to update a user's profile """
 

@@ -51,3 +51,4 @@ class BaseTestCase(unittest.TestCase):
         db.session.add(clip)
         db.session.commit()
         search.add_clip(clip)
+        return clip

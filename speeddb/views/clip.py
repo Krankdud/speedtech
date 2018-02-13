@@ -1,4 +1,4 @@
-from speeddb import db, forms, oembed_cache, search, statsd
+from speeddb import db, forms, oembed_cache, search, statsd, util
 from speeddb.views import blueprint
 from speeddb.models.clips import Clip
 from speeddb.models.tags import Tag
@@ -45,8 +45,9 @@ def show_clip(clip_id):
     clip_embed = oembed_cache.get(clip.url)
 
     report_form = forms.ReportForm(clip_id=clip_id)
+    delete_form = forms.DeleteClipForm(clip_id=clip_id)
 
-    return render_template('clip.html', clip=clip, clip_embed=clip_embed, report_form=report_form)
+    return render_template('clip.html', clip=clip, clip_embed=clip_embed, report_form=report_form, delete_form=delete_form)
 
 @blueprint.route('/clip/<int:clip_id>/edit', methods=['GET', 'POST'])
 @login_required
@@ -89,3 +90,23 @@ def edit_clip(clip_id):
         return redirect(url_for('views.show_clip', clip_id=clip.id))
 
     return render_template('upload.html', form=form, post_url=url_for('views.edit_clip', clip_id=clip_id), title='Edit your clip')
+
+@blueprint.route('/clip/delete', methods=['POST'])
+@login_required
+@statsd.timer('views.clip.delete')
+def delete_clip():
+    form = forms.DeleteClipForm()
+    clip = Clip.query.get(form.clip_id.data)
+    if clip == None:
+        abort(404)
+
+    if clip.user.id != current_user.id and not util.is_admin(current_user):
+        abort(403)
+
+    if form.validate():
+        
+        search.remove_clip(clip)
+        db.session.delete(clip)
+        db.session.commit()
+
+    return redirect(url_for('views.index'))

@@ -7,37 +7,47 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="/report", method="POST" role="form">
+            {% if g.user.is_authenticated %}
+                <form action="{{ url_for('views.report') }}" method="POST" role="form">
+                    <div class="modal-body">
+                        {{ report_form.csrf_token }}
+                        {{ report_form.clip_id }}
+                        <div class="form-group">
+                            {{ report_form.reason.label }}
+                            {% for subfield in report_form.reason %}
+                                <div class="form-check">
+                                    {{ subfield(class="form-check-input") }}
+                                    {{ subfield.label(class="form-check-label") }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <div class="form-group">
+                            {{ report_form.description.label }}
+                            {% if report_form.description.errors %}
+                                {{ report_form.description(class="form-control is-invalid") }}
+                                <div class="invalid-feedback">
+                                    {% for error in report_form.description.errors %}{{ error }}{% endfor %}
+                                </div>
+                            {% else %}
+                                {{ report_form.description(class="form-control") }}
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="form-group">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </div>
+                    </div>
+                </form>
+            {% else %}
                 <div class="modal-body">
-                    {{ report_form.csrf_token }}
-                    {{ report_form.clip_id }}
-                    <div class="form-group">
-                        {{ report_form.reason.label }}
-                        {% for subfield in report_form.reason %}
-                            <div class="form-check">
-                                {{ subfield(class="form-check-input") }}
-                                {{ subfield.label(class="form-check-label") }}
-                            </div>
-                        {% endfor %}
-                    </div>
-                    <div class="form-group">
-                        {{ report_form.description.label }}
-                        {% if report_form.description.errors %}
-                            {{ report_form.description(class="form-control is-invalid") }}
-                            <div class="invalid-feedback">
-                                {% for error in report_form.description.errors %}{{ error }}{% endfor %}
-                            </div>
-                        {% else %}
-                            {{ report_form.description(class="form-control") }}
-                        {% endif %}
-                    </div>
+                    You must be <a href="/user/sign-in">logged in</a> to report.
                 </div>
                 <div class="modal-footer">
-                    <div class="form-group">
-                        <button type="submit" class="btn btn-primary">Submit</button>
-                    </div>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </div>
-            </form>
+            {% endif %}
         </div>
     </div>
 </div>

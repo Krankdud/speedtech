@@ -22,6 +22,11 @@
     {% endif %}
     {{ separator() }}
     <a href="#" data-toggle="modal" data-target="#report-modal">Report</a>
+    {% if g.user.is_authenticated and (g.user.id == clip.user.id or g.user_is_admin) %}
+        {{ separator() }}
+        <a href="#" data-toggle="modal" data-target="#delete-modal">Delete</a>
+    {% endif %}
 </div>
 {% include "report.html" with context %}
+{% include "delete.html" with context %}
 {% endblock %}
