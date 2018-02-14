@@ -47,7 +47,7 @@ def create_app(extra_config_options={}):
     import speeddb.search as search
     search.create_index(app.config['WHOOSH_INDEX'])
 
-    from speeddb.views import clip, index, report, search, user
+    from speeddb.views import clip, index, report, search, user, tags
     from speeddb.views import blueprint
     app.register_blueprint(blueprint)
 

@@ -8,7 +8,7 @@
 	{{ render_field(form.title, placeholder='Title') }}
 	{{ render_field(form.description, placeholder='Description') }}
 	{{ render_field(form.url, placeholder='Link to video (YouTube, Twitter, Twitch)') }}
-	{{ render_field(form.tags, **{'data-role': 'tagsinput'}) }}
+	{{ render_field(form.tags, classes='upload-tagsinput', show_help=true, help_text='Space, comma, or enter separates tags. Use hyphens instead of spaces in tags (e.g. "Cap Kingdom" becomes "cap-kingdom")') }}
 	<div class="form-group">
 		<button type="submit" class="btn btn-primary">Submit</button>
 	</div>
