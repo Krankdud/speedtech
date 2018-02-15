@@ -41,7 +41,7 @@ def create_app(extra_config_options={}):
 
     # Initialize the oembed cache
     import speeddb.oembed_cache as oembed_cache
-    oembed_cache.init_cache()
+    oembed_cache.init_cache(cache_type=app.config['OEMBED_CACHE_TYPE'], cache_dir=app.config['OEMBED_CACHE_FILE_DIRECTORY'], timeout=app.config['OEMBED_CACHE_TIMEOUT'])
 
     # Create the search index
     import speeddb.search as search

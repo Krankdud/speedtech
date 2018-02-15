@@ -15,3 +15,8 @@ def index():
         clip.embed = oembed_cache.get(clip.url)
 
     return render_template('index.html', clips=clips, clip_count='{:,}'.format(clip_count))
+
+@blueprint.route('/about')
+@statsd.timer('views.about')
+def about():
+    return render_template('about.html')

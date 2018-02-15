@@ -24,7 +24,6 @@
   <body>
 
     <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
-      <a class="navbar-brand" href="/">SpeedDB</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -33,6 +32,7 @@
         <div class="navbar-nav mr-md-4">
           <a class="nav-item nav-link" href="{{ url_for('views.index') }}">Home</a>
           <a class="nav-item nav-link" href="{{ url_for('views.upload_clip') }}">Upload</a>
+          <a class="nav-item nav-link" href="{{ url_for('views.about') }}">About</a>
         </div>
         <form action="/search" class="form-inline my-2 my-lg-0 mr-auto" role="search">
           <input class="form-control mr-sm-2" type="text" name="q" placeholder="Clips, users, tags..." aria-label="Search">
