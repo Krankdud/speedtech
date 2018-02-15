@@ -2,7 +2,10 @@ $(document).ready(function() {
     var tags = new Bloodhound({
         datumTokenizer: Bloodhound.tokenizers.whitespace,
         queryTokenizer: Bloodhound.tokenizers.whitespace,
-        prefetch: '/_get-tags'
+        prefetch: {
+            url: '/_get-tags',
+            cache: false
+        }
     });
     tags.initialize();
 

@@ -120,4 +120,19 @@ def create_app(extra_config_options={}):
         db.session.commit()
         click.echo('Done!')
 
+    @app.cli.command()
+    @click.argument('name')
+    def add_tag(name): #pragma no cover
+        from speeddb.models.tags import Tag
+        tag = Tag.query.filter_by(name=name).first()
+        if tag != None:
+            click.echo('%s already exists' % name)
+            return
+
+        click.echo('Added tag "%s" to the database' % name) 
+        tag = Tag(name=name)
+        db.session.add(tag)
+        db.session.commit()
+        click.echo('Done!')
+
     return app
