@@ -7,6 +7,27 @@ from tests.base_test_case import BaseTestCase
 from tests.constants import *
 
 class FormsTestCase(BaseTestCase):
+    def test_validate_url_youtube(self):
+        form = forms.UploadForm()
+        field_mock = mock.Mock(data=CLIP_URL_YOUTUBE)
+        form.validate_url(field_mock)
+
+    def test_validate_url_twitch(self):
+        form = forms.UploadForm()
+        field_mock = mock.Mock(data=CLIP_URL_TWITCH)
+        form.validate_url(field_mock)
+
+    def test_validate_url_twitter(self):
+        form = forms.UploadForm()
+        field_mock = mock.Mock(data=CLIP_URL_TWITTER)
+        form.validate_url(field_mock)
+
+    def test_validate_url_invalid(self):
+        form = forms.UploadForm()
+        field_mock = mock.Mock(data='https://github.com/Krankdud')
+        with self.assertRaises(ValidationError):
+            form.validate_url(field_mock)
+
     def test_validate_tags(self):
         form = forms.UploadForm()
         field_mock = mock.Mock(data=CLIP_TAGS)

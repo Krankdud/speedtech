@@ -1,3 +1,4 @@
+import re
 from flask import current_app
 from flask_wtf import FlaskForm
 from flask_wtf.recaptcha import RecaptchaField
@@ -21,6 +22,14 @@ class UploadForm(FlaskForm):
     description = TextAreaField(u'Description', [Length(max=cn.CLIP_DESCRIPTION_LENGTH)])
     url = StringField(u'URL', [DataRequired(), URL(), Length(max=cn.CLIP_URL_LENGTH)])
     tags = StringField(u'Tags')
+
+    valid_urls = re.compile('(https?://)?([a-z]+\.)?((twitter\.com)|(twitch\.tv)|(youtube\.com))/')
+
+    def validate_url(self, url_field):
+        """ Validates that the url is either a YouTube, Twitter, or Twitch url """
+        valid_url = self.valid_urls.match(url_field.data)
+        if valid_url == None:
+            raise ValidationError('Invalid URL. The URL must be URL to either YouTube, Twitter, or Twitch')
 
     def validate_tags(self, tags_field):
         """ Validates that each tag is within the character limit. """
