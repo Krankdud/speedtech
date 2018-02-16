@@ -1,4 +1,4 @@
-{% macro search_result(clip, loop_index, show_user=true) -%}
+{% macro search_result(clip, loop_index, show=false, show_user=true) -%}
     <div class="card mb-2">
         <div class="card-header" id="heading{{ loop_index }}">
             <div class="row">
@@ -14,7 +14,7 @@
                 {% endif %}
             </div>
         </div>
-        <div id="collapse{{ loop_index }}" class="collapse" aria-labelledby="heading{{ loop_index }}">
+        <div id="collapse{{ loop_index }}" class="collapse{% if show %} show{% endif %}" aria-labelledby="heading{{ loop_index }}">
             <div class="card-body">
                 <div class="search-embed embed-responsive embed-responsive-16by9">
                     {{ clip.embed }}

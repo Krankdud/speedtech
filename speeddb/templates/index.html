@@ -15,6 +15,6 @@
 </div>
 <h1>Recently added clips</h1>
 {% for clip in clips %}
-    {{ search_result(clip, loop.index) }}
+    {{ search_result(clip, loop.index, show=loop.first) }}
 {% endfor %}
 {% endblock %}
