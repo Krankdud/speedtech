@@ -1,8 +1,10 @@
 # SpeedTech
 [![Build Status](https://travis-ci.org/Krankdud/speedtech.svg?branch=master)](https://travis-ci.org/Krankdud/speedtech) [![codecov](https://codecov.io/gh/Krankdud/speedtech/branch/master/graph/badge.svg)](https://codecov.io/gh/Krankdud/speedtech) [![MIT Licence](https://badges.frapsoft.com/os/mit/mit.svg?v=103)](https://opensource.org/licenses/mit-license.php)
+
 SpeedTech is a website for finding speedrunning clips and strategies. The goal is to get all of the clips scattered around Twitter, YouTube, and Twitch and compile them all into one location where people can easily find them.
 
 ## Setting up the development server
+
 ```bash
 git clone https://github.com/Krankdud/speedtech
 virtualenv venv
@@ -16,7 +18,9 @@ flask run
 The server should be running on localhost:5000
 
 ## Configuration
+
 Create a directory named "instance" in the same directory as setup.py. Add configuration settings to "instance/application.py"
+
 Setting | Explanation
 ------- | -----------
 ENABLE_LOGGING | Set to true to enable logging
@@ -40,6 +44,7 @@ Other Flask configuration also belongs in this file. Check the documentation for
 * [Flask-WTF](https://flask-wtf.readthedocs.io/en/stable/config.html)
 
 ## Testing
+
 Tests use the standard Python unittest module and can be run using:
 ```bash
 python setup.py test
