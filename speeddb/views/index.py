@@ -13,6 +13,7 @@ def index():
 
     for clip in clips:
         clip.embed = oembed_cache.get(clip.url)
+        clip.is_twitter = 'class="twitter-tweet"' in clip.embed
 
     return render_template('index.html', clips=clips, clip_count='{:,}'.format(clip_count))
 

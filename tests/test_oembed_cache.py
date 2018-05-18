@@ -24,7 +24,7 @@ class OembedCacheTestCase(unittest.TestCase):
 
         oembed_cache.init_cache()
         markup = oembed_cache.get(CLIP_URL_TWITTER)
-        mock_pyembed.return_value.embed.assert_called_with(CLIP_URL_TWITTER, widget_type='video')
+        mock_pyembed.return_value.embed.assert_called_with(CLIP_URL_TWITTER)
         self.assertEqual(markup.striptags(), OEMBED_MARKUP)
 
     @mock.patch('speeddb.oembed_cache.PyEmbed', autospec=True)
@@ -33,7 +33,7 @@ class OembedCacheTestCase(unittest.TestCase):
 
         oembed_cache.init_cache()
         oembed_cache.get(CLIP_URL_TWITTER)
-        mock_pyembed.return_value.embed.assert_called_with(CLIP_URL_TWITTER, widget_type='video')
+        mock_pyembed.return_value.embed.assert_called_with(CLIP_URL_TWITTER)
 
         mock_pyembed.return_value.embed.reset_mock()
 
@@ -47,12 +47,12 @@ class OembedCacheTestCase(unittest.TestCase):
 
         oembed_cache.init_cache(timeout=1)
         oembed_cache.get(CLIP_URL_TWITTER)
-        mock_pyembed.return_value.embed.assert_called_with(CLIP_URL_TWITTER, widget_type='video')
+        mock_pyembed.return_value.embed.assert_called_with(CLIP_URL_TWITTER)
 
         time.sleep(2)
 
         markup = oembed_cache.get(CLIP_URL_TWITTER)
-        mock_pyembed.return_value.embed.assert_called_with(CLIP_URL_TWITTER, widget_type='video')
+        mock_pyembed.return_value.embed.assert_called_with(CLIP_URL_TWITTER)
         self.assertEqual(markup.striptags(), OEMBED_MARKUP)
 
 

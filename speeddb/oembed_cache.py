@@ -28,7 +28,7 @@ def get(url):
     if embed_html == None:
         start = time.time()
 
-        embed_html = PyEmbed().embed(url, widget_type='video')
+        embed_html = PyEmbed().embed(url)
 
         dt = int((time.time() - start) * 1000)
         if 'youtube' in url:

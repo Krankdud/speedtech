@@ -14,9 +14,11 @@ def get_clips_on_page(clips, page, clips_per_page=cn.SEARCH_CLIPS_PER_PAGE):
     clips_on_page = clips[(page - 1) * clips_per_page : page * clips_per_page]
     for clip in clips_on_page:
         clip.embed = oembed_cache.get(clip.url)
+        clip.is_twitter = 'class="twitter-tweet"' in clip.embed
     return clips_on_page
 
 def fetch_embeds_for_clips(clips):
     ''' fetch_embeds_for_clips gets the html for embedded videos for each clip from the cache '''
     for clip in clips:
         clip.embed = oembed_cache.get(clip.url)
+        clip.is_twitter = 'class="twitter-tweet"' in clip.embed

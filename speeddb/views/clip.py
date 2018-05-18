@@ -46,6 +46,7 @@ def show_clip(clip_id):
         abort(404)
 
     clip_embed = oembed_cache.get(clip.url)
+    clip.is_twitter = 'class="twitter-tweet"' in clip_embed
 
     report_form = forms.ReportForm(clip_id=clip_id)
     delete_form = forms.DeleteClipForm(clip_id=clip_id)

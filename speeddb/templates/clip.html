@@ -3,7 +3,7 @@
 {% block content %}
 <h1>{{ clip.title }}</h1>
 <div class="clip-author">Submitted by <a href="{{ url_for('views.user_profile_page', username=clip.user.username, page=1) }}">{{ clip.user.username }}</a> on {{ clip.time_created }}</div>
-<div class="clip-embed embed-responsive embed-responsive-16by9">
+<div class="clip-embed embed-responsive{% if not clip.is_twitter %} embed-responsive-16by9{% endif %}">
     {{ clip_embed }}
 </div>
 <div class="clip-description">
