@@ -25,7 +25,7 @@ class ViewSearchTestCase(BaseTestCase):
 
         self.assertEqual(response_redirect.get_data(), response_tag_page.get_data())
 
-    @mock.patch('speeddb.views.search.oembed_cache.get')
+    @mock.patch('speeddb.pagination.oembed_cache.get')
     def test_search_clips(self, mock_oembed_cache):
         mock_oembed_cache.return_value = ''
 
