@@ -26,6 +26,9 @@ USER_ENABLE_LOGIN_WITHOUT_CONFIRM_EMAIL = False
 MAIL_DEFAULT_SENDER = 'noreply <noreply@speeddb.com>'
 MAIL_SERVER = '127.0.0.1'
 MAIL_PORT = '25'
+MAIL_ERROR_SENDER = 'server-error@speeddb.com'
+MAIL_ERROR_RECV = ''
+MAIL_ERROR_SUBJECT = 'Server Error'
 
 STATSD_HOST = 'localhost'
 STATSD_PORT = 8125

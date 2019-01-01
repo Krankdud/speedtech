@@ -1,6 +1,6 @@
 import click
 import logging
-from logging.handlers import TimedRotatingFileHandler
+from logging.handlers import SMTPHandler, TimedRotatingFileHandler
 import shutil
 from flask import Flask, g
 from flask_mail import Mail
@@ -22,7 +22,19 @@ def create_app(extra_config_options={}):
     app.config.from_pyfile('application.cfg', silent=True)
     app.config.from_mapping(extra_config_options)
 
-    if app.config['ENABLE_LOGGING']: # pragma: no cover
+    if app.config['ENABLE_LOGGING'] and not app.config['TESTING']: # pragma: no cover
+        mail_handler = SMTPHandler(
+            mailhost=app.config['MAIL_SERVER'],
+            fromaddr=app.config['MAIL_ERROR_SENDER'],
+            toaddrs=[app.config['MAIL_ERROR_RECV']],
+            subject=app.config['MAIL_ERROR_SUBJECT']
+        )
+        mail_handler.setLevel(logging.ERROR)
+        mail_handler.setFormatter(logging.Formatter(
+            '[%(asctime)s] %(levelname)s in %(module)s: %(message)s'
+        ))
+        app.logger.addHandler(mail_handler)
+
         file_handler = TimedRotatingFileHandler(app.config['LOG_FILENAME'], when='midnight')
         file_handler.setLevel(logging.WARNING)
         app.logger.addHandler(file_handler)
