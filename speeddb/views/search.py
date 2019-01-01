@@ -1,4 +1,4 @@
-from speeddb import constants as cn, forms, oembed_cache, pagination, search, statsd
+from speeddb import constants as cn, forms, pagination, search, statsd
 from speeddb.views import blueprint
 from speeddb.models.clips import Clip
 from speeddb.models.tags import Tag

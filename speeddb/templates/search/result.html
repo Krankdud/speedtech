@@ -16,9 +16,15 @@
         </div>
         <div id="collapse{{ loop_index }}" class="collapse{% if show %} show{% endif %}" aria-labelledby="heading{{ loop_index }}">
             <div class="card-body">
+                {% if clip.not_found %}
+                <div class="search-not-found alert alert-danger">
+                    Could not find the video for this clip
+                </div>
+                {% else %}
                 <div class="search-embed embed-responsive{% if not clip.is_twitter %} embed-responsive-16by9{% endif %}">
                     {{ clip.embed }}
                 </div>
+                {% endif %}
                 <div class="search-author">
                     Submitted {% if show_user %}by <a href="{{ url_for('views.user_profile_page', username=clip.user.username, page=1) }}">{{ clip.user.username }}</a> {% endif %}on {{ clip.time_created }}
                 </div>

@@ -11,11 +11,18 @@ def index():
     clips = Clip.query.order_by(Clip.time_created.desc()).limit(20).all()
     clip_count = db.session.query(func.count('*')).select_from(Clip).scalar()
 
+    valid_clips = []
     for clip in clips:
-        clip.embed = oembed_cache.get(clip.url)
-        clip.is_twitter = 'class="twitter-tweet"' in clip.embed
+        try:
+            clip.embed = oembed_cache.get(clip.url)
+            clip.is_twitter = 'class="twitter-tweet"' in clip.embed
+            valid_clips.append(clip)
+        except:
+            # Warning is logged by oembed_cache
+            pass
 
-    return render_template('index.html', clips=clips, clip_count='{:,}'.format(clip_count))
+    print(valid_clips)
+    return render_template('index.html', clips=valid_clips, clip_count='{:,}'.format(clip_count))
 
 @blueprint.route('/about')
 @statsd.timer('views.about')

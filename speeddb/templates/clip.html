@@ -3,9 +3,15 @@
 {% block content %}
 <h1>{{ clip.title }}</h1>
 <div class="clip-author">Submitted by <a href="{{ url_for('views.user_profile_page', username=clip.user.username, page=1) }}">{{ clip.user.username }}</a> on {{ clip.time_created }}</div>
+{% if clip.not_found %}
+<div class="clip-not-found alert alert-danger">
+    Could not find the video for this clip
+</div>
+{% else %}
 <div class="clip-embed embed-responsive{% if not clip.is_twitter %} embed-responsive-16by9{% endif %}">
     {{ clip_embed }}
 </div>
+{% endif %}
 <div class="clip-description">
     {{ clip.description }}
 </div>

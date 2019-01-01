@@ -1,3 +1,4 @@
+import logging
 import time
 from flask import Markup
 from pyembed.core import PyEmbed
@@ -5,6 +6,7 @@ from werkzeug.contrib.cache import SimpleCache, MemcachedCache, FileSystemCache
 from speeddb import statsd
 
 cache = None
+log = logging.getLogger('flask.app')
 
 def init_cache(cache_type="simple", memcached_servers=[], cache_dir=None, timeout=259200):
     ''' init_cache creates the oembed cache with the given cache type
@@ -28,20 +30,24 @@ def get(url):
     if embed_html == None:
         start = time.time()
 
-        embed_html = PyEmbed().embed(url)
+        try:
+            embed_html = PyEmbed().embed(url)
 
-        dt = int((time.time() - start) * 1000)
-        if 'youtube' in url:
-            statsd.timing('oembed.get.youtube', dt)
-        elif 'twitch' in url:
-            statsd.timing('oembed.get.twitch', dt)
-        elif 'twitter' in url:
-            statsd.timing('oembed.get.twitter', dt)
-        else:
-            statsd.timing('oembed.get.other', dt)
+            dt = int((time.time() - start) * 1000)
+            if 'youtube' in url:
+                statsd.timing('oembed.get.youtube', dt)
+            elif 'twitch' in url:
+                statsd.timing('oembed.get.twitch', dt)
+            elif 'twitter' in url:
+                statsd.timing('oembed.get.twitter', dt)
+            else:
+                statsd.timing('oembed.get.other', dt)
 
-        cache.set(url, embed_html)
-        statsd.incr('oembed.cache.miss')
+            cache.set(url, embed_html)
+            statsd.incr('oembed.cache.miss')
+        except KeyError as error:
+            log.warning("Could not obtain clip from oembed for url: %s", url)
+            raise
     else:
         statsd.incr('oembed.cache.hit')
     return Markup(embed_html)
