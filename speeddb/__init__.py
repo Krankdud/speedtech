@@ -27,7 +27,8 @@ def create_app(extra_config_options={}):
             mailhost=app.config['MAIL_SERVER'],
             fromaddr=app.config['MAIL_ERROR_SENDER'],
             toaddrs=[app.config['MAIL_ERROR_RECV']],
-            subject=app.config['MAIL_ERROR_SUBJECT']
+            subject=app.config['MAIL_ERROR_SUBJECT'],
+            credentials=(app.config['MAIL_USERNAME'], app.config['MAIL_PASSWORD'])
         )
         mail_handler.setLevel(logging.ERROR)
         mail_handler.setFormatter(logging.Formatter(
