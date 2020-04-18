@@ -45,6 +45,8 @@
         {{ render_field(form.retype_password, tabindex=240) }}
     {% endif %}
 
+    {{ render_field(form.cappy, tabindex=250) }}
+
     <div class="form-group">
         {{ form.recaptcha }}
         {% for error in form.recaptcha.errors %}

@@ -65,7 +65,12 @@ class ReportForm(FlaskForm):
 
 class RecaptchaRegisterForm(RegisterForm):
     """ RecaptchaRegisterForm is the register form from flask-user with recaptcha added to it """
+    cappy = StringField(u'What is the name of Mario\'s hat?')
     recaptcha = RecaptchaField()
+
+    def validate_cappy(self, cappy_field):
+        if cappy_field.data.strip().lower() != 'cappy':
+            raise ValidationError('Your answer is incorrect')
 
 class LoginFormWithBans(LoginForm):
     """ LoginFormWithBans is a flask-user LoginForm that checks if a user is banned while validating """
