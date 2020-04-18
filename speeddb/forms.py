@@ -68,9 +68,14 @@ class RecaptchaRegisterForm(RegisterForm):
     cappy = StringField(u'What is the name of Mario\'s hat?')
     recaptcha = RecaptchaField()
 
-    def validate_cappy(self, cappy_field):
-        if cappy_field.data.strip().lower() != 'cappy':
-            raise ValidationError('Your answer is incorrect')
+    def validate(self):
+        if self.cappy.data.strip().lower() != 'cappy':
+           self.cappy.errors = ['Your answer is incorrect']
+           return False 
+        
+        if not super().validate():
+            return False
+        return True
 
 class LoginFormWithBans(LoginForm):
     """ LoginFormWithBans is a flask-user LoginForm that checks if a user is banned while validating """
