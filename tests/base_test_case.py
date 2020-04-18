@@ -37,7 +37,7 @@ class BaseTestCase(unittest.TestCase):
         shutil.rmtree(self.app.config['WHOOSH_INDEX'])
 
     def register(self, username=USER_NAME, email=USER_EMAIL, password=USER_PASSWORD):
-        return self.client.post('/user/register', data=dict(username=username, email=email, password=password, retype_password=password), follow_redirects=True)
+        return self.client.post('/user/register', data=dict(username=username, email=email, password=password, retype_password=password, cappy='cappy'), follow_redirects=True)
 
     def login(self, username=USER_NAME, password=USER_PASSWORD):
         return self.client.post('/user/sign-in', data=dict(username=username, password=password), follow_redirects=True)
